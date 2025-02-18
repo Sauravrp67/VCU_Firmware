@@ -1,0 +1,56 @@
+#include "tasks/rtd_task.h"
+#include "main.h"
+
+/**
+* @brief Actual RTD task function
+*
+* @param arg App_data struct pointer converted to void pointer
+*/
+void rtd_task_fn(void *arg);
+
+TaskHandle_t rtd_task_start(app_data_t *data)
+{
+   TaskHandle_t handle;
+   xTaskCreate(rtd_task_fn, "RTD task", 128, (void *)data, 20, &handle);
+   return handle;
+}
+
+void rtd_task_fn(void *arg)
+{
+    app_data_t *data = (app_data_t *)arg;
+    uint32_t delay;
+
+	for(;;)
+	{
+		data->tsal = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
+		data->rtd_button = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
+		if(!data->rtd_state)
+		{
+			delay = 50;
+			// EV.10.4.3
+			if(data->tsal && data->brakelight && data->rtd_button)
+			{
+				set_buzzer(1);
+				osDelay(3000);
+				set_buzzer(0);
+				data->rtd_state = true;
+			}
+		}
+		else
+		{
+			delay = 100;
+			if(!data->tsal || !data->rtd_button)
+			{
+				data->rtd_state = false;
+				if(!data->hard_fault && data->tsal)
+				{
+					// Trip Shutdown circuit
+					set_fw(0);
+					osDelay(delay);
+					set_fw(1);
+				}
+			}
+		}
+
+		osDelay(delay);
+	}
