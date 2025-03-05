@@ -6,7 +6,7 @@ firmware against `docs/Rearchitect_Spec.md`, and the decision taken for each
 the refactor's pin map and torque path are what they are.
 
 **Source-of-truth decision (overarching):** The **as-built code**
-(`Core/Inc/main.h`, `Core/Src/board.c`, `Core/Src/stm32f1xx_hal_msp.c`) is the
+(`Core/Inc/main.h`, `Core/bsp/board.c`, `Core/Src/stm32f1xx_hal_msp.c`) is the
 authoritative pin map, because it reflects the hardware proven on-car. Where the
 spec §3 "whiteboard" map disagrees, **spec §3 is corrected to match the code**,
 not the reverse. The spec itself flags §3 as an unvalidated transcription.

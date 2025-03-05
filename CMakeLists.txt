@@ -26,8 +26,8 @@ set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/STM32F103RBTX_FLASH.ld)
 add_executable(${PROJECT_NAME}
     Core/Startup/startup_stm32f103rbtx.s
     Core/Src/main.c
-    Core/Src/app.c
-    Core/Src/board.c
+    Core/app/app.c
+    Core/bsp/board.c
     Core/control/apps.c
     Core/control/torque.c
     Core/control/state_machine.c
@@ -41,19 +41,19 @@ add_executable(${PROJECT_NAME}
     Core/Src/syscalls.c
     Core/Src/sysmem.c
     Core/Src/system_stm32f1xx.c
-    Core/Src/drivers/can_bus.c
-    Core/Src/drivers/cli.c
-    Core/Src/drivers/dashboard.c
-    Core/Src/drivers/map.c
-    Core/Src/drivers/pot.c
-    Core/Src/drivers/pressure_sense.c
-    Core/Src/drivers/speed_sensor.c
-    Core/Src/drivers/stm32f103.c
-    Core/Src/app/safety_task.c
-    Core/Src/app/canbus_task.c
-    Core/Src/app/cli_task.c
-    Core/Src/app/dashboard_task.c
-    Core/Src/app/rtd_task.c
+    Core/drivers/can_bus.c
+    Core/drivers/cli.c
+    Core/drivers/dashboard.c
+    Core/drivers/map.c
+    Core/drivers/pot.c
+    Core/drivers/pressure_sense.c
+    Core/drivers/speed_sensor.c
+    Core/drivers/stm32f103.c
+    Core/app/safety_task.c
+    Core/app/canbus_task.c
+    Core/app/cli_task.c
+    Core/app/dashboard_task.c
+    Core/app/rtd_task.c
     FATFS/App/fatfs.c
     FATFS/Target/user_diskio.c
     Middlewares/Third_Party/FatFs/src/diskio.c

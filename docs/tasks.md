@@ -1,6 +1,6 @@
 # FreeRTOS Task Table
 
-Task design after the Step 7 redesign (`Core/Src/app.c`, `Core/Src/tasks/`).
+Task design after the Step 7 redesign (`Core/app/`).
 FreeRTOS 10, preemptive, 1 kHz tick. All application tasks use **static
 allocation** (`xTaskCreateStatic`); the idle/timer/default tasks and mutexes are
 created at init. RAM budget **20 KB**; firmware links at ~74 % (debug).

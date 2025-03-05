@@ -12,11 +12,9 @@ mapfile -t files < <(git ls-files \
   'Core/control/*.c' 'Core/control/*.h' \
   'Core/safety/*.c'  'Core/safety/*.h' \
   'Core/proto/*.c'   'Core/proto/*.h' \
-  'Core/bsp/*.h' \
-  'Core/Src/app/*.c' 'Core/Inc/app/*.h' \
-  'Core/Src/drivers/*.c' 'Core/Inc/drivers/*.h' \
-  'Core/Src/app.c' 'Core/Inc/app.h' \
-  'Core/Src/board.c' 'Core/Inc/board.h' \
+  'Core/bsp/*.c' 'Core/bsp/*.h' \
+  'Core/app/*.c' 'Core/app/*.h' \
+  'Core/drivers/*.c' 'Core/drivers/*.h' \
   'test/*.c' 'test/*.h')
 
 case "$mode" in

@@ -17,7 +17,7 @@
 
 #include "main.h"
 #include "cmsis_os.h"
-#include "board.h"
+#include "bsp/board.h"
 
 /* Hardware-free decision logic (host-tested) drives the safety behavior. */
 #include "control/apps.h"

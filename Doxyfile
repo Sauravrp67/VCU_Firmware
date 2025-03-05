@@ -13,10 +13,8 @@ INPUT                  = README.md \
                          Core/safety \
                          Core/proto \
                          Core/bsp \
-                         Core/Inc/app \
-                         Core/Src/app \
-                         Core/Inc/drivers \
-                         Core/Src/drivers
+                         Core/app \
+                         Core/drivers
 FILE_PATTERNS          = *.c *.h *.md
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = README.md

@@ -31,6 +31,6 @@
 
 ## Generated-Code Boundary
 
-Keep CubeMX-regenerated code inside `USER CODE` sections. Put durable application logic in `Core/Src/app.c`, `Core/Src/board.c`, `Core/Src/tasks/`, and `Core/Src/device_drivers/`.
+Keep CubeMX-regenerated code inside `USER CODE` sections. Put durable application logic in `Core/app/`, `Core/bsp/`, `Core/control/`, `Core/safety/`, `Core/proto/`, and `Core/drivers/`.
 
 The CMake build intentionally compiles the same sources as the CubeIDE project so unresolved stale symbols fail during normal CLI builds.

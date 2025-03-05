@@ -1,7 +1,7 @@
 #ifndef __DASHBOARD_TASK_H_
 #define __DASHBOARD_TASK_H_
 
-#include "app.h"
+#include "app/app.h"
 
 #include "cmsis_os.h"
 

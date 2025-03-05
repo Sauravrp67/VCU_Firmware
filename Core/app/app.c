@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "app.h"
+#include "app/app.h"
 #include "app/safety_task.h"
 #include "app/rtd_task.h"
 #include "app/canbus_task.h"
