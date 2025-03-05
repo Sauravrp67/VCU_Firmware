@@ -57,41 +57,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define B1_Pin GPIO_PIN_13
-#define B1_GPIO_Port GPIOC
-#define B1_EXTI_IRQn EXTI15_10_IRQn
-#define AIR_Status_Pin GPIO_PIN_0
-#define AIR_Status_GPIO_Port GPIOC
-#define RTD_Input_Pin GPIO_PIN_1
-#define RTD_Input_GPIO_Port GPIOC
-#define BrakePressureSensor_Pin GPIO_PIN_3
-#define BrakePressureSensor_GPIO_Port GPIOC
-#define SDC_Status_In_Pin GPIO_PIN_1
-#define SDC_Status_In_GPIO_Port GPIOA
-#define USART_TX_Pin GPIO_PIN_2
-#define USART_TX_GPIO_Port GPIOA
-#define USART_RX_Pin GPIO_PIN_3
-#define USART_RX_GPIO_Port GPIOA
-#define RTD_OUTPUT_Pin GPIO_PIN_4
-#define RTD_OUTPUT_GPIO_Port GPIOA
-#define LD2_Pin GPIO_PIN_5
-#define LD2_GPIO_Port GPIOA
-#define CurrentSensor_Pin GPIO_PIN_7
-#define CurrentSensor_GPIO_Port GPIOA
-#define APPS2_Pin GPIO_PIN_5
-#define APPS2_GPIO_Port GPIOC
-#define APPS1_Pin GPIO_PIN_0
-#define APPS1_GPIO_Port GPIOB
-#define Brake_Light_Pin GPIO_PIN_2
-#define Brake_Light_GPIO_Port GPIOB
-#define SDC_OP_Pin GPIO_PIN_10
-#define SDC_OP_GPIO_Port GPIOB
-#define TMS_Pin GPIO_PIN_13
-#define TMS_GPIO_Port GPIOA
-#define TCK_Pin GPIO_PIN_14
-#define TCK_GPIO_Port GPIOA
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
+/* The hardware pin map now lives in the single source of truth: bsp/board_config.h.
+ * The legacy *_Pin / *_GPIO_Port names below are aliased there for back-compat. */
+#include "bsp/board_config.h"
 
 /* USER CODE BEGIN Private defines */
 
