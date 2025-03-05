@@ -36,7 +36,10 @@ void canbus_task_fn(void *arg)
 			for(int i = 0; i < DATALEN; i++) canbus->tx_packet.data[i] = 0;
 			taskEXIT_CRITICAL();
 			can_status = HAL_CAN_AddTxMessage(hcan, tx_header, can_packet.data, &canbus->tx_mailbox);
-			data->canbus_fault = (can_status != HAL_OK);
+			if(can_status != HAL_OK)
+				fault_set(&data->faults, FAULT_CANBUS_TX);
+			else
+				fault_clear(&data->faults, FAULT_CANBUS_TX);
 		}
 	}
 }

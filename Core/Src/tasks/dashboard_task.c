@@ -30,16 +30,21 @@ void dashboard_task_fn(void *arg)
 		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "brake %d" NEWLINE, data->brake);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "rtd %d" NEWLINE, data->rtd_state);
+		snprintf(dash->line, DASH_LINESZ, "torque %d" NEWLINE, data->torque_cmd);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "bms_fail %d" NEWLINE, data->bms_fail);
+		snprintf(dash->line, DASH_LINESZ, "state %d" NEWLINE, (int)data->vcu_state);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "imd_fail %d" NEWLINE, data->imd_fail);
+		snprintf(dash->line, DASH_LINESZ, "faults 0x%lx" NEWLINE,
+		         (unsigned long)data->faults.latched);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "ecu_fault %d" NEWLINE, data->hard_fault);
+		snprintf(dash->line, DASH_LINESZ, "hard_fault %d" NEWLINE,
+		         (int)fault_is_hard(&data->faults));
 		ret |= dashboard_write(dash, dash->line);
 		// Additional metrics can be added after dashboard hardware validation.
-		data->dashboard_fault = (ret != HAL_OK);
+		if(ret != HAL_OK)
+			fault_set(&data->faults, FAULT_DASHBOARD);
+		else
+			fault_clear(&data->faults, FAULT_DASHBOARD);
 
 		osDelayUntil(entry + (1000 / DASH_FREQ));
 	}

@@ -27,8 +27,7 @@ void apps_task_fn(void *arg)
     pot_t *apps1 = &data->board.apps1;
     pot_t *apps2 = &data->board.apps2;
 
-    float throttle_raw;
-    uint16_t throttle_hex;
+    const uint32_t period_ms = 1000u / APPS_FREQ;
     uint32_t entry;
 
     for(;;)
@@ -40,16 +39,21 @@ void apps_task_fn(void *arg)
         apps1->percent = pot_get_percent(apps1);
         apps2->percent = pot_get_percent(apps2);
 
-        throttle_raw = (apps1->percent + apps2->percent) / 2;
-        data->throttle = (int)throttle_raw;
+        data->throttle = (int)apps_throttle_pct(apps1->percent, apps2->percent);
 
-        // T.4.2.5 (2022)
-        if(!pot_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10))
+        // §5.1: 10% / 100 ms plausibility incl. open-circuit; latches, and now
+        // recovers when the channels agree and the pedal returns to idle.
+        if(apps_plausibility_update(&data->apps_state,
+                                    apps1->percent, apps2->percent, period_ms))
         {
-            data->apps_fault = true;
+            fault_clear(&data->faults, FAULT_APPS);
+        }
+        else
+        {
+            fault_set(&data->faults, FAULT_APPS);
         }
 
     	xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
-        osDelayUntil(entry + (1000 / APPS_FREQ));
+        osDelayUntil(entry + period_ms);
     }
 }

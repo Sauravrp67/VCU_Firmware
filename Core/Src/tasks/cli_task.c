@@ -15,7 +15,7 @@ void cli_task_fn(void *arg)
 
     for(;;)
     {
-        data->cli_fault = false;
+        fault_clear(&data->faults, FAULT_CLI);
         osDelay(1000 / CLI_FREQ);
     }
 }

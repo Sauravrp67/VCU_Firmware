@@ -20,33 +20,24 @@ void bppc_task_fn(void *arg)
     app_data_t *data = (app_data_t *)arg;
 
     uint32_t entry;
-	bool brakesEnganged = false;
-	bool throttleEngaged = false;
-	bool throttleReleased = true;
 
 	for(;;)
 	{
 		entry = osKernelGetTickCount();
 
-		// EV.4.7.1 (2024)
-		brakesEnganged = (data->brake > BPPC_BSE_THRESH);
-		throttleEngaged = (data->throttle > BPPC_APPS_H_THRESH);
-		throttleReleased = (data->throttle < BPPC_APPS_L_THRESH);
-
-		if(data->bppc_fault)
+		// §5.2 (EV.4.7): latch a torque cut when brake > 10% AND throttle > 25%;
+		// clears only when throttle < 5%. The fault manager (error_task) is the
+		// single owner of the SDC/torque response — this task no longer writes
+		// the shutdown circuit directly (removes a 3-way write race), and the
+		// latch now cuts torque rather than killing the tractive system, which
+		// is sufficient per §5.2.
+		if(bppc_update(&data->bppc_state, (float)data->brake, (float)data->throttle))
 		{
-			// EV.4.7.2 (2024)
-			if(throttleReleased)
-			{
-				data->bppc_fault = false;
-				set_fw(1);
-			}
+			fault_clear(&data->faults, FAULT_BPPC);
 		}
-		else if(brakesEnganged && throttleEngaged)
+		else
 		{
-			// EV.4.7.2 (2024)
-			data->bppc_fault = true;
-			set_fw(0);
+			fault_set(&data->faults, FAULT_BPPC);
 		}
 
 		osDelayUntil(entry + (1000 / BPPC_FREQ));

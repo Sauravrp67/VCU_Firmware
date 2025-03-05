@@ -89,6 +89,34 @@ All resolved in favor of as-built per the overarching decision.
 
 ---
 
+## Deliberate behavior changes (Step 5 — flagged for race-engineer review)
+
+These correct weaknesses that were below a §5 invariant. Everything else is
+preserved as-is.
+
+1. **Single SDC writer.** Previously `error_task`, `bppc_task`, and `rtd_task`
+   all wrote the shutdown-circuit output every cycle (a 3-way race). Now the
+   **fault manager in `error_task` is the only writer**: SDC opens iff a *hard*
+   fault is latched.
+2. **Brake-throttle (BPPC) now cuts torque, not the tractive system.** The old
+   code drove `set_fw(0)` (opened SDC) on a brake-throttle latch. Per §5.1/§5.2
+   zero-torque is sufficient, so BPPC now raises `FAULT_BPPC` → torque held at
+   zero, SDC stays closed. **This is less aggressive than before** — confirm it
+   matches your rules interpretation.
+3. **APPS fault can now recover.** `apps_fault` previously latched forever. The
+   new `control/apps` clears the latch only when the channels agree *and* the
+   pedal returns to idle (§5.1).
+4. **APPS open-circuit / out-of-range** detection added (was absent).
+5. **BSE open-circuit** detection added (raw ADC outside [50, 4000]); `bse_fault`
+   was previously declared but never set.
+6. **RTD buzzer is non-blocking.** Replaced the blocking `osDelay(3000)` with a
+   timed state in the new TS-Off→TS-Active→RTD→Drive state machine; the
+   RTD-exit SDC pulse was removed (the fault manager owns the SDC). Buzzer
+   duration kept at the as-built 3 s (upper bound of the 1-3 s window).
+7. **CAN command watchdog** (`safety/fault` `can_watchdog_t`) added but **not yet
+   armed** — it is wired to CAN RX feeding in Step 6 to avoid a false zero-torque
+   before the inverter heartbeat is decoded.
+
 ## Open items to confirm during implementation
 - **Accumulator voltage source** for the pre-charge ≥90 % gate (Step 5): no ADC
   pin exists, so it almost certainly arrives via AMS/BMS over CAN — confirm the

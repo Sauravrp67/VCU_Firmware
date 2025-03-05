@@ -18,31 +18,18 @@ void app_create()
 {
 	app.throttle = 0;
 	app.brake = 0;
+	app.torque_cmd = 0;
 
-	app.rtd_state = false;
-
-	app.hard_fault = false;
-	app.soft_fault = false;
-
-
-	app.apps_fault = false;
-	app.bse_fault = false;
-	app.bppc_fault = false;
-	app.cli_fault = false;
-	app.canbus_fault = false;
-	app.dashboard_fault = false;
+	apps_state_init(&app.apps_state);
+	bppc_state_init(&app.bppc_state);
+	fault_init(&app.faults);
+	can_wd_init(&app.can_wd);
+	app.vcu_state = VCU_STATE_TS_OFF;
 
 	app.fw_state = false;
 	app.tsal = false;
 	app.rtd_button = false;
-	app.imd_fail = false;
-	app.bms_fail = false;
-	app.bspd_fail = false;
-
 	app.brakelight = false;
-
-	app.throttle = 0;
-	app.brake = 0;
 
 	board_init(&app.board);
 

@@ -18,40 +18,78 @@ TaskHandle_t rtd_task_start(app_data_t *data)
 void rtd_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
-    uint32_t delay;
+    const uint32_t period = 50; /* ms */
+    uint32_t buzzer_start = 0;
 
 	for(;;)
 	{
 		data->tsal = HAL_GPIO_ReadPin(AIR_Status_GPIO_Port, AIR_Status_Pin);
 		data->rtd_button = HAL_GPIO_ReadPin(RTD_Input_GPIO_Port, RTD_Input_Pin);
-		if(!data->rtd_state)
+
+		// A hard fault forces the fail-safe state from anywhere. The SDC itself
+		// is driven by the fault manager (error_task), not here.
+		if(fault_is_hard(&data->faults))
 		{
-			delay = 50;
-			// EV.10.4.3
-			if(data->tsal && data->brakelight && data->rtd_button)
-			{
-				set_buzzer(1);
-				osDelay(3000);
-				set_buzzer(0);
-				data->rtd_state = true;
-			}
-		}
-		else
-		{
-			delay = 100;
-			if(!data->tsal || !data->rtd_button)
-			{
-				data->rtd_state = false;
-				if(!data->hard_fault && data->tsal)
-				{
-					// Trip Shutdown circuit
-					set_fw(0);
-					osDelay(delay);
-					set_fw(1);
-				}
-			}
+			set_buzzer(0);
+			data->vcu_state = VCU_STATE_FAULT;
 		}
 
-		osDelay(delay);
+		switch(data->vcu_state)
+		{
+		case VCU_STATE_FAULT:
+			if(!fault_is_hard(&data->faults))
+				data->vcu_state = VCU_STATE_TS_OFF;
+			break;
+
+		case VCU_STATE_TS_OFF:
+			set_buzzer(0);
+			// AIRs closed (tsal) => external pre-charge complete. Pre-charge
+			// voltage gating (precharge_complete(), §5.4) is wired once the AMS
+			// reports DC-bus voltage over CAN (Step 6).
+			if(data->tsal)
+				data->vcu_state = VCU_STATE_TS_ACTIVE;
+			break;
+
+		case VCU_STATE_TS_ACTIVE:
+			if(!data->tsal)
+			{
+				data->vcu_state = VCU_STATE_TS_OFF;
+			}
+			// §5.5 (EV.10.4.3): TS active AND brake-inclusive driver action.
+			else if(rtd_entry_allowed(data->tsal, data->brakelight, data->rtd_button))
+			{
+				set_buzzer(1);
+				buzzer_start = osKernelGetTickCount();
+				data->vcu_state = VCU_STATE_RTD;
+			}
+			break;
+
+		case VCU_STATE_RTD:
+			// §5.5: sound the buzzer 1-3 s, non-blocking, then enter Drive.
+			if(!data->tsal || !data->rtd_button)
+			{
+				set_buzzer(0);
+				data->vcu_state = VCU_STATE_TS_OFF;
+			}
+			else if((osKernelGetTickCount() - buzzer_start) >= RTD_BUZZER_MS)
+			{
+				set_buzzer(0);
+				data->vcu_state = VCU_STATE_DRIVE;
+			}
+			break;
+
+		case VCU_STATE_DRIVE:
+			// Ready to drive: torque responds to APPS (gated by the fault mgr).
+			if(!data->tsal || !data->rtd_button)
+				data->vcu_state = VCU_STATE_TS_OFF;
+			break;
+
+		case VCU_STATE_PRECHARGE:
+		default:
+			data->vcu_state = VCU_STATE_TS_OFF;
+			break;
+		}
+
+		osDelay(period);
 	}
 }

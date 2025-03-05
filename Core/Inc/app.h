@@ -19,11 +19,20 @@
 #include "cmsis_os.h"
 #include "board.h"
 
-#define PLAUSIBILITY_THRESH 10
+/* Hardware-free decision logic (host-tested) drives the safety behavior. */
+#include "control/apps.h"
+#include "control/torque.h"
+#include "control/state_machine.h"
+#include "safety/plausibility.h"
+#include "safety/fault.h"
+
+/* Brake-light illuminates above this brake travel (T.4.3.3). The APPS/BPPC/
+ * torque thresholds now live with their logic in control/ and safety/. */
 #define BRAKE_LIGHT_THRESH 5
-#define BPPC_BSE_THRESH 10
-#define BPPC_APPS_H_THRESH 25
-#define BPPC_APPS_L_THRESH 5
+
+/* A BSE raw ADC reading outside this band is treated as open/short-circuit. */
+#define BSE_RAW_OPEN_LO 50u
+#define BSE_RAW_OPEN_HI 4000u
 
 #define ERR_FREQ 20
 #define APPS_FREQ 20
@@ -41,32 +50,23 @@
 #define CAN_PRIO 14
 #define DASH_PRIO 4
 
-#define MAXTRQ 160
-
 typedef struct {
-	int throttle;
-	int brake;
+	int throttle;            /* derived APPS travel, 0..100 */
+	int brake;               /* derived BSE travel, 0..100 */
+	int16_t torque_cmd;      /* clamped torque command (sent over CAN, Step 6) */
 
-	bool rtd_state;
+	/* Hardware-free module state (the single owners of safety decisions). */
+	apps_state_t   apps_state;   /* §5.1 APPS plausibility + recovery */
+	bppc_state_t   bppc_state;   /* §5.2 brake-throttle latch */
+	fault_mgr_t    faults;       /* single fault registry; only error_task acts on it */
+	can_watchdog_t can_wd;       /* §5.7 CAN command watchdog */
+	vcu_state_t    vcu_state;    /* TS-Off -> ... -> Drive state machine */
 
-	bool hard_fault;
-	bool soft_fault;
-
-	bool apps_fault;
-	bool bse_fault;
-	bool bppc_fault;
-	bool canbus_fault;
-	bool dashboard_fault;
-	bool cli_fault;
-
-	bool fw_state;
-	bool tsal;
-	bool rtd_button;
-	bool imd_fail;
-	bool bms_fail;
-	bool bspd_fail;
-
-	bool brakelight;
+	/* Inputs / actuator status. */
+	bool fw_state;           /* commanded SDC output state (1 = closed) */
+	bool tsal;               /* tractive-system-active (AIR status) input */
+	bool rtd_button;         /* RTD driver-action button */
+	bool brakelight;         /* brake-light output state */
 
 	board_t board;
 

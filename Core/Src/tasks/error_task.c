@@ -25,22 +25,17 @@ void error_task_fn(void *arg)
     {
         entry = osKernelGetTickCount();
 
-		data->imd_fail = false;
-		data->bms_fail = false;
-		data->bspd_fail = false;
+		// Central fault manager: this is the ONLY task that drives the SDC.
+		// §5.6: any hard fault (APPS implausibility, BSE open-circuit, CAN
+		// timeout) opens the shutdown circuit; the BPPC latch and soft faults
+		// do not. Torque is held at zero whenever any torque-inhibiting fault
+		// (hard fault or BPPC latch) is active.
+		set_fw(!fault_is_hard(&data->faults));
 
-
-
-		data->hard_fault = (data->apps_fault ||
-				            data->bse_fault);
-
-        data->soft_fault =(data->bppc_fault ||
-        				   data->cli_fault ||
-						   data->canbus_fault ||
-						   data->dashboard_fault
-						   );
-
-		set_fw(!data->hard_fault);
+		if(fault_torque_inhibited(&data->faults))
+		{
+			data->torque_cmd = 0;
+		}
 
         osDelayUntil(entry + (1000 / ERR_FREQ));
     }

@@ -30,7 +30,6 @@ typedef struct {
 
 void pot_init(pot_t *pot,uint16_t min,uint16_t max,ADC_HandleTypeDef *handle);
 float pot_get_percent(pot_t *raw);
-uint16_t pot_percent_to_hex(float percent);
-uint8_t pot_check_plausibility(float L,float R,int thresh, int count);
+/* APPS plausibility moved to the hardware-free control/apps module (host-tested). */
 
 #endif

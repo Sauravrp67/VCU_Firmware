@@ -20,7 +20,6 @@ void bse_task_fn(void *arg)
     app_data_t *data = (app_data_t *)arg;
     pressure_sensor_t *bse = &data->board.bse;
 
-    float brake_raw;
     uint32_t entry;
 
 	for(;;)
@@ -31,10 +30,18 @@ void bse_task_fn(void *arg)
 		bse->count = stm32f103_adc_read(bse->handle);
 		bse->percent = pressure_sensor_get_percent(bse);
 
-		// T.4.3.3 (2022)
+		// §5.6: brake-sensor open/short circuit is a safety fault (zero-torque).
+		if(bse->count < BSE_RAW_OPEN_LO || bse->count > BSE_RAW_OPEN_HI)
+		{
+			fault_set(&data->faults, FAULT_BSE);
+		}
+		else
+		{
+			fault_clear(&data->faults, FAULT_BSE);
+		}
 
-		brake_raw = (bse->percent);
-		data->brake = (int)brake_raw;
+		// T.4.3.3 (2022)
+		data->brake = (int)bse->percent;
 		set_brakelight((data->brake >= BRAKE_LIGHT_THRESH));
 
 		osDelayUntil(entry + (1000 / BSE_FREQ));
