@@ -104,3 +104,24 @@ HAL_StatusTypeDef stm32f103_adc_switch_channel(ADC_HandleTypeDef *hadc, uint32_t
 	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
 	return HAL_ADC_ConfigChannel(hadc, &sConfig);
 }
+
+/* IWDG key-register sequences. */
+#define IWDG_KEY_ACCESS  0x5555u  /* unlock PR/RLR writes */
+#define IWDG_KEY_START   0xCCCCu  /* start the watchdog   */
+#define IWDG_KEY_RELOAD  0xAAAAu  /* refresh (feed)       */
+#define IWDG_PR_DIV256   6u       /* prescaler divider /256 */
+
+void stm32f103_iwdg_init(void)
+{
+	IWDG->KR = IWDG_KEY_ACCESS;     /* enable write access to PR/RLR */
+	IWDG->PR = IWDG_PR_DIV256;      /* LSI/256 ~= 156 Hz @ 40 kHz    */
+	IWDG->RLR = 78u;                /* ~0.5 s nominal timeout        */
+	while (IWDG->SR != 0u) { }      /* wait for PR/RLR update to apply */
+	IWDG->KR = IWDG_KEY_START;      /* start (cannot be stopped)     */
+	IWDG->KR = IWDG_KEY_RELOAD;     /* initial reload                */
+}
+
+void stm32f103_iwdg_refresh(void)
+{
+	IWDG->KR = IWDG_KEY_RELOAD;
+}

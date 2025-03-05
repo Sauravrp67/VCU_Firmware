@@ -7,11 +7,13 @@
 
 void dashboard_task_fn(void *arg);
 
+#define DASH_STACK_WORDS 256
 TaskHandle_t dashboard_task_start(app_data_t *data)
 {
-   TaskHandle_t handle;
-   xTaskCreate(dashboard_task_fn, "Dashboard task", 128, (void *)data, DASH_PRIO, &handle);
-   return handle;
+   static StackType_t stack[DASH_STACK_WORDS];
+   static StaticTask_t tcb;
+   return xTaskCreateStatic(dashboard_task_fn, "Dashboard task", DASH_STACK_WORDS,
+                            (void *)data, DASH_PRIO, stack, &tcb);
 }
 
 void dashboard_task_fn(void *arg)

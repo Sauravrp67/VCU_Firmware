@@ -9,10 +9,12 @@
  */
 void canbus_task_fn(void *arg);
 
+#define CANBUS_STACK_WORDS 256
 TaskHandle_t canbus_task_start(app_data_t *data) {
-    TaskHandle_t handle;
-    xTaskCreate(canbus_task_fn, "CANBus Task", 512, (void *)data, CAN_PRIO, &handle);
-    return handle;
+    static StackType_t stack[CANBUS_STACK_WORDS];
+    static StaticTask_t tcb;
+    return xTaskCreateStatic(canbus_task_fn, "CANBus Task", CANBUS_STACK_WORDS,
+                             (void *)data, CAN_PRIO, stack, &tcb);
 }
 
 void canbus_task_fn(void *arg)

@@ -43,4 +43,10 @@ void stm32f103_init(stm32f103_t *dev);
 uint16_t stm32f103_adc_read(ADC_HandleTypeDef *hadc);
 HAL_StatusTypeDef stm32f103_adc_switch_channel(ADC_HandleTypeDef *hadc, uint32_t channel);
 
+/* Independent watchdog (register level; the HAL IWDG module is not vendored).
+ * ~0.5 s nominal timeout (LSI 40 kHz, /256, reload 78). Init once before the
+ * scheduler starts; refresh from the safety_monitor task only. */
+void stm32f103_iwdg_init(void);
+void stm32f103_iwdg_refresh(void);
+
 #endif

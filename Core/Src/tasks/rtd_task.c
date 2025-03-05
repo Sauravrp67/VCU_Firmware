@@ -8,11 +8,14 @@
 */
 void rtd_task_fn(void *arg);
 
+#define RTD_STACK_WORDS 128
 TaskHandle_t rtd_task_start(app_data_t *data)
 {
-   TaskHandle_t handle;
-   xTaskCreate(rtd_task_fn, "RTD task", 128, (void *)data, 20, &handle);
-   return handle;
+   static StackType_t stack[RTD_STACK_WORDS];
+   static StaticTask_t tcb;
+   /* Fixed: was a literal priority 20; use RTD_PRIO. */
+   return xTaskCreateStatic(rtd_task_fn, "RTD task", RTD_STACK_WORDS,
+                            (void *)data, RTD_PRIO, stack, &tcb);
 }
 
 void rtd_task_fn(void *arg)

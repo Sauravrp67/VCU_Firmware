@@ -2,11 +2,8 @@
 #include <string.h>
 
 #include "app.h"
-#include "tasks/bse_task.h"
+#include "tasks/safety_task.h"
 #include "tasks/rtd_task.h"
-#include "tasks/error_task.h"
-#include "tasks/bppc_task.h"
-#include "tasks/apps_task.h"
 #include "tasks/canbus_task.h"
 #include "tasks/cli_task.h"
 #include "tasks/dashboard_task.h"
@@ -40,18 +37,13 @@ void app_create()
 	assert(app.cli_task != NULL);
 	app.rtd_task = rtd_task_start(&app);
 	assert(app.rtd_task != NULL);
-	app.error_task = error_task_start(&app);
-	assert(app.error_task != NULL);
 	app.canbus_task = canbus_task_start(&app);
 	assert(app.canbus_task != NULL);
-	app.bse_task = bse_task_start(&app);
-	assert(app.bse_task != NULL);
-	app.apps_task = apps_task_start(&app);
-	assert(app.apps_task != NULL);
-	app.bppc_task = bppc_task_start(&app);
-	assert(app.bppc_task != NULL);
 	app.dashboard_task = dashboard_task_start(&app);
 	assert(app.dashboard_task != NULL);
+	/* The safety monitor is started last so canbus_task exists for its notify. */
+	app.safety_task = safety_task_start(&app);
+	assert(app.safety_task != NULL);
 }
 
 void cli_putline(char *line)

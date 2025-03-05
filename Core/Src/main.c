@@ -128,7 +128,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_Init();
   /* USER CODE BEGIN 2 */
-
+  /* IWDG last: it starts counting immediately and is fed by safety_monitor.
+   * Driven at register level (the HAL IWDG module is not vendored). */
+  stm32f103_iwdg_init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

@@ -2,11 +2,13 @@
 
 void cli_task_fn(void *arg);
 
+#define CLI_STACK_WORDS 128
 TaskHandle_t cli_task_start(app_data_t *data)
 {
-    TaskHandle_t handle;
-    xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, CLI_PRIO, &handle);
-    return handle;
+    static StackType_t stack[CLI_STACK_WORDS];
+    static StaticTask_t tcb;
+    return xTaskCreateStatic(cli_task_fn, "CLI task", CLI_STACK_WORDS,
+                             (void *)data, CLI_PRIO, stack, &tcb);
 }
 
 void cli_task_fn(void *arg)

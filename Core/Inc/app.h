@@ -34,21 +34,24 @@
 #define BSE_RAW_OPEN_LO 50u
 #define BSE_RAW_OPEN_HI 4000u
 
-#define ERR_FREQ 20
-#define APPS_FREQ 20
-#define BSE_FREQ 20
-#define BPPC_FREQ 20
+/* The safety-critical loop (APPS/BSE acquisition + plausibility + BPPC + fault
+ * manager + SDC + IWDG) runs in one highest-priority task at SAFETY_FREQ so the
+ * 100 ms plausibility window is detected with wide margin (§8). */
+#define SAFETY_FREQ 200   /* Hz -> 5 ms safety loop */
 #define DASH_FREQ 5
 #define CLI_FREQ 10
 
-#define ERR_PRIO 17
+/* Priorities (higher number = more urgent). */
+#define SAFETY_PRIO 24    /* highest user task */
 #define RTD_PRIO 16
 #define CLI_PRIO 15
-#define APPS_PRIO 14
-#define BPPC_PRIO 8
-#define BSE_PRIO 7
 #define CAN_PRIO 14
 #define DASH_PRIO 4
+
+/* CAN command watchdog (§5.7): leave DISARMED until the real inverter heartbeat
+ * ID replaces the placeholder in proto/can_catalog.h. Arming it with a
+ * placeholder ID would never be fed and would force permanent zero-torque. */
+#define CAN_WATCHDOG_ARMED 0
 
 typedef struct {
 	int throttle;            /* derived APPS travel, 0..100 */
@@ -70,13 +73,9 @@ typedef struct {
 
 	board_t board;
 
-	TaskHandle_t dev_task;
+	TaskHandle_t safety_task;
 	TaskHandle_t cli_task;
 	TaskHandle_t rtd_task;
-	TaskHandle_t error_task;
-	TaskHandle_t apps_task;
-	TaskHandle_t bse_task;
-	TaskHandle_t bppc_task;
 	TaskHandle_t canbus_task;
 	TaskHandle_t dashboard_task;
 
