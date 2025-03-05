@@ -1,5 +1,6 @@
 #include "tasks/canbus_task.h"
 #include "device_drivers/can_bus.h"
+#include "proto/can_catalog.h"
 
 /**
  * @brief CANBus task function
@@ -30,11 +31,12 @@ void canbus_task_fn(void *arg)
 		xTaskNotifyWait(0, UINT32_MAX, &task_notification, HAL_MAX_DELAY);
 		if(task_notification & CANBUS_APPS)
 		{
-			taskENTER_CRITICAL();
-			for(int i = 0; i < DATALEN; i++) can_packet.data[i] = canbus->tx_packet.data[i];
-			tx_header->StdId = canbus->tx_packet.id;
-			for(int i = 0; i < DATALEN; i++) canbus->tx_packet.data[i] = 0;
-			taskEXIT_CRITICAL();
+			// §5.7 authoritative zero-torque gate: any torque-inhibiting fault
+			// (hard fault or BPPC latch) forces the transmitted command to zero.
+			int16_t torque = fault_torque_inhibited(&data->faults) ? 0 : data->torque_cmd;
+			can_encode_torque_cmd(can_packet.data, torque);
+			tx_header->StdId = CAN_ID_VCU_TORQUE_CMD; /* PLACEHOLDER id */
+
 			can_status = HAL_CAN_AddTxMessage(hcan, tx_header, can_packet.data, &canbus->tx_mailbox);
 			if(can_status != HAL_OK)
 				fault_set(&data->faults, FAULT_CANBUS_TX);

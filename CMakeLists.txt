@@ -33,6 +33,7 @@ add_executable(${PROJECT_NAME}
     Core/control/state_machine.c
     Core/safety/plausibility.c
     Core/safety/fault.c
+    Core/proto/can_catalog.c
     Core/Src/freertos.c
     Core/Src/stm32f1xx_hal_msp.c
     Core/Src/stm32f1xx_hal_timebase_tim.c

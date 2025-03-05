@@ -117,9 +117,24 @@ preserved as-is.
    armed** — it is wired to CAN RX feeding in Step 6 to avoid a false zero-torque
    before the inverter heartbeat is decoded.
 
+## Step 6 status — CAN torque path (PLACEHOLDER catalog)
+- `proto/can_catalog.{h,c}` implements a hardware-free, host-tested torque codec.
+  The torque command is now actually built and transmitted: `apps_task` computes
+  the clamped request, `canbus_task` encodes it and applies the §5.7 zero-torque
+  gate at the send boundary (`CAN_ID_VCU_TORQUE_CMD`).
+- **The message IDs and torque scaling are PLACEHOLDERS** (`0x100/0x200/0x300`,
+  1 unit/LSB little-endian). NOT flashable-correct until replaced with the real
+  inverter/AMS catalog (ID, DLC, byte order, scaling, heartbeat period).
+- The **CAN-timeout watchdog** mechanism (`safety/fault` + `can_is_inverter_heartbeat`)
+  is host-tested but **not yet armed**: no CAN RX path exists (no `CAN1_RX0`
+  IRQ/NVIC, no `HAL_CAN_RxFifo0MsgPendingCallback`). Arming it (feed on the
+  inverter heartbeat) is wired in Step 7 alongside the NVIC/RTOS work, once the
+  real heartbeat ID is known — left unarmed for now to avoid a false permanent
+  zero-torque from an unfed placeholder watchdog.
+
 ## Open items to confirm during implementation
-- **Accumulator voltage source** for the pre-charge ≥90 % gate (Step 5): no ADC
-  pin exists, so it almost certainly arrives via AMS/BMS over CAN — confirm the
-  message/scaling before implementing the gate.
-- **CAN message catalog** (Step 6): inverter + AMS message IDs/layouts are not
-  yet defined in code (`can_bus.c` uses placeholder ID `0x00`).
+- **Inverter torque-command message**: ID, DLC, byte layout, scaling, endianness.
+- **Inverter + AMS heartbeat** IDs and periods (for the CAN command watchdog).
+- **Accumulator voltage source** for the pre-charge ≥90 % gate: no ADC pin exists,
+  so it almost certainly arrives via AMS/BMS over CAN (`CAN_ID_AMS_DCBUS`
+  placeholder) — confirm message/scaling before arming the gate.

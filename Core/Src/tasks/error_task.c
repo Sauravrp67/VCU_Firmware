@@ -28,14 +28,9 @@ void error_task_fn(void *arg)
 		// Central fault manager: this is the ONLY task that drives the SDC.
 		// §5.6: any hard fault (APPS implausibility, BSE open-circuit, CAN
 		// timeout) opens the shutdown circuit; the BPPC latch and soft faults
-		// do not. Torque is held at zero whenever any torque-inhibiting fault
-		// (hard fault or BPPC latch) is active.
+		// do not. The zero-torque guarantee for torque-inhibiting faults is
+		// enforced at the CAN send boundary (canbus_task).
 		set_fw(!fault_is_hard(&data->faults));
-
-		if(fault_torque_inhibited(&data->faults))
-		{
-			data->torque_cmd = 0;
-		}
 
         osDelayUntil(entry + (1000 / ERR_FREQ));
     }

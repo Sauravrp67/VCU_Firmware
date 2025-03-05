@@ -40,6 +40,9 @@ void apps_task_fn(void *arg)
         apps2->percent = pot_get_percent(apps2);
 
         data->throttle = (int)apps_throttle_pct(apps1->percent, apps2->percent);
+        // §5.7 requested torque (clamped, no reverse). The authoritative
+        // zero-torque gate on faults is applied at the CAN send boundary.
+        data->torque_cmd = torque_from_throttle_pct((float)data->throttle);
 
         // §5.1: 10% / 100 ms plausibility incl. open-circuit; latches, and now
         // recovers when the channels agree and the pedal returns to idle.
