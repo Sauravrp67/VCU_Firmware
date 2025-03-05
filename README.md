@@ -110,6 +110,9 @@ The script tries `STM32_Programmer_CLI`, then falls back to OpenOCD
 - [`docs/discrepancies.md`](docs/discrepancies.md) — every spec/hardware discrepancy and its resolution
 - [`docs/architecture.md`](docs/architecture.md), [`docs/hardware.md`](docs/hardware.md), [`docs/bringup.md`](docs/bringup.md)
 
+API reference (Doxygen): `doxygen Doxyfile` → `build/doxygen/html/index.html`. CI
+also builds it and uploads it as the `api-docs` artifact.
+
 ## Status / known limitations
 
 - **CAN catalog is placeholder.** Message IDs and torque scaling in

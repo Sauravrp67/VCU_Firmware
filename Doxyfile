@@ -1,0 +1,38 @@
+# Doxygen configuration for the VCU firmware API docs.
+# Generate locally:  doxygen Doxyfile   (output in build/doxygen/html)
+PROJECT_NAME           = "VCU Firmware"
+PROJECT_BRIEF          = "STM32F103 FSAE-EV Vehicle Control Unit"
+OUTPUT_DIRECTORY       = build/doxygen
+CREATE_SUBDIRS         = NO
+
+# Only the hand-written firmware + docs; vendored HAL/FreeRTOS/FatFs and the
+# CubeMX-generated plumbing are excluded.
+INPUT                  = README.md \
+                         docs \
+                         Core/control \
+                         Core/safety \
+                         Core/proto \
+                         Core/bsp \
+                         Core/Inc/app \
+                         Core/Src/app \
+                         Core/Inc/drivers \
+                         Core/Src/drivers
+FILE_PATTERNS          = *.c *.h *.md
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = README.md
+
+# C project tuning.
+OPTIMIZE_OUTPUT_FOR_C  = YES
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+JAVADOC_AUTOBRIEF      = YES
+MARKDOWN_SUPPORT       = YES
+SORT_MEMBER_DOCS       = NO
+
+# Output: HTML only, quiet, no graphviz dependency.
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HAVE_DOT               = NO
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_AS_ERROR          = NO

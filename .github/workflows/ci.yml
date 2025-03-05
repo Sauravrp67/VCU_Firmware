@@ -56,6 +56,24 @@ jobs:
           name: coverage-html
           path: build/test/coverage*.html
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends doxygen
+      - name: Generate API docs
+        run: doxygen Doxyfile
+      - name: Upload docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: build/doxygen/html
+      # To publish at https://<user>.github.io/<repo>/, enable Pages
+      # (Settings -> Pages -> "GitHub Actions") and add an actions/deploy-pages step.
+
   lint:
     runs-on: ubuntu-latest
     steps:
