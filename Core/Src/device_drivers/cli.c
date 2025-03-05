@@ -25,12 +25,10 @@ int cli_printline(cli_t *dev, char *line)
 		ret |= HAL_UART_Transmit_IT(dev->huart, (uint8_t *)line, strlen(line));
 		ret |= HAL_UART_Transmit_IT(dev->huart, (uint8_t*)nl, strlen(nl));
 	}
-	else
+		else
 	{
-		//while(osMutexAcquire(app.board.stm32f767.uart3_mutex, 0) != osOK) osDelay(5);
 		ret |= HAL_UART_Transmit(dev->huart, (uint8_t *)line, strlen(line), HAL_MAX_DELAY);
 		ret |= HAL_UART_Transmit(dev->huart, (uint8_t *)nl, strlen(nl), HAL_MAX_DELAY);
-		//osMutexRelease(app.board.stm32f767.uart3_mutex);
 	}
 	return ret;
 }

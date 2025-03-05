@@ -117,7 +117,11 @@ DRESULT USER_read (
 )
 {
   /* USER CODE BEGIN READ */
-    return RES_OK;
+    (void)pdrv;
+    (void)buff;
+    (void)sector;
+    (void)count;
+    return RES_NOTRDY;
   /* USER CODE END READ */
 }
 
@@ -138,8 +142,11 @@ DRESULT USER_write (
 )
 {
   /* USER CODE BEGIN WRITE */
-  /* USER CODE HERE */
-    return RES_OK;
+    (void)pdrv;
+    (void)buff;
+    (void)sector;
+    (void)count;
+    return RES_NOTRDY;
   /* USER CODE END WRITE */
 }
 #endif /* _USE_WRITE == 1 */
@@ -159,9 +166,11 @@ DRESULT USER_ioctl (
 )
 {
   /* USER CODE BEGIN IOCTL */
+    (void)pdrv;
+    (void)cmd;
+    (void)buff;
     DRESULT res = RES_ERROR;
     return res;
   /* USER CODE END IOCTL */
 }
 #endif /* _USE_IOCTL == 1 */
-

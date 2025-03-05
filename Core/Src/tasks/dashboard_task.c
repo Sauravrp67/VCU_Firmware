@@ -1,3 +1,10 @@
+#include <stdio.h>
+
+#include "tasks/dashboard_task.h"
+#include "device_drivers/dashboard.h"
+
+#define NEWLINE "\r\n"
+
 void dashboard_task_fn(void *arg);
 
 TaskHandle_t dashboard_task_start(app_data_t *data)
@@ -31,7 +38,7 @@ void dashboard_task_fn(void *arg)
 		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "ecu_fault %d" NEWLINE, data->hard_fault);
 		ret |= dashboard_write(dash, dash->line);
-		// TODO: add rest of metrics after testing
+		// Additional metrics can be added after dashboard hardware validation.
 		data->dashboard_fault = (ret != HAL_OK);
 
 		osDelayUntil(entry + (1000 / DASH_FREQ));

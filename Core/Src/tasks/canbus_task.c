@@ -23,22 +23,20 @@ void canbus_task_fn(void *arg)
     CAN_TxHeaderTypeDef *tx_header = data->board.canbus.tx_header;
     canbus_packet_t can_packet;
     HAL_StatusTypeDef can_status;
-    osStatus_t mq_status;
     uint32_t task_notification;
 
-//    for(;;)
-//    {
-//    	xTaskNotifyWait(CANBUS_APPS, 0, &task_notification, HAL_MAX_DELAY);
-//		if(task_notification & CANBUS_APPS)
-//		{
-//			taskENTER_CRITICAL();
-//			for(int i = 0; i < 8; i++) can_packet.data[i] = canbus->tx_packet.data[i];
-//			tx_header->StdId = canbus->tx_packet.id;
-//			for(int i = 0; i < 8; i++) canbus->tx_packet.data[i] = 0;
-//			taskEXIT_CRITICAL();
-//			can_status = HAL_CAN_AddTxMessage(hcan, tx_header, can_packet.data, &canbus->tx_mailbox);
-//			data->canbus_fault = (can_status != HAL_OK);
-//		}
-//	}
-//    data->mq_fault = (mq_status != osOK);
-//}
+    for(;;)
+    {
+		xTaskNotifyWait(0, UINT32_MAX, &task_notification, HAL_MAX_DELAY);
+		if(task_notification & CANBUS_APPS)
+		{
+			taskENTER_CRITICAL();
+			for(int i = 0; i < DATALEN; i++) can_packet.data[i] = canbus->tx_packet.data[i];
+			tx_header->StdId = canbus->tx_packet.id;
+			for(int i = 0; i < DATALEN; i++) canbus->tx_packet.data[i] = 0;
+			taskEXIT_CRITICAL();
+			can_status = HAL_CAN_AddTxMessage(hcan, tx_header, can_packet.data, &canbus->tx_mailbox);
+			data->canbus_fault = (can_status != HAL_OK);
+		}
+	}
+}

@@ -22,19 +22,20 @@ typedef struct {
 	ADC_HandleTypeDef hadc2;
 
 	CAN_HandleTypeDef hcan1;
+	CAN_TxHeaderTypeDef can1_tx_header;
 
 	I2C_HandleTypeDef hi2c1;
 
 	SPI_HandleTypeDef hspi2;
 
 	UART_HandleTypeDef huart1;
-	UART_HandleTypeDef huart3;
+	UART_HandleTypeDef huart2;
 
 	osMutexId_t can1_mutex;
 	osMutexId_t i2c1_mutex;
 	osMutexId_t spi2_mutex;
 	osMutexId_t	uart1_mutex;
-	osMutexId_t	uart3_mutex;
+	osMutexId_t	uart2_mutex;
 } stm32f103_t;
 
 

@@ -28,7 +28,7 @@ void bse_task_fn(void *arg)
 		entry = osKernelGetTickCount();
 
 		stm32f103_adc_switch_channel(bse->handle, bse->channel);
-		bse->count = stm32f767_adc_read(bse->handle);
+		bse->count = stm32f103_adc_read(bse->handle);
 		bse->percent = pressure_sensor_get_percent(bse);
 
 		// T.4.3.3 (2022)

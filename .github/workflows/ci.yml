@@ -1,0 +1,21 @@
+name: firmware-build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  cmake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GNU Arm toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi binutils-arm-none-eabi cmake make
+      - name: Build debug
+        run: ./scripts/build.sh debug
+      - name: Build release
+        run: ./scripts/build.sh release
+      - name: Report release size
+        run: ./scripts/size.sh release

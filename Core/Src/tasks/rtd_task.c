@@ -22,8 +22,8 @@ void rtd_task_fn(void *arg)
 
 	for(;;)
 	{
-		data->tsal = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
-		data->rtd_button = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
+		data->tsal = HAL_GPIO_ReadPin(AIR_Status_GPIO_Port, AIR_Status_Pin);
+		data->rtd_button = HAL_GPIO_ReadPin(RTD_Input_GPIO_Port, RTD_Input_Pin);
 		if(!data->rtd_state)
 		{
 			delay = 50;
@@ -54,3 +54,4 @@ void rtd_task_fn(void *arg)
 
 		osDelay(delay);
 	}
+}

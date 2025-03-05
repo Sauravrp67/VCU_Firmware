@@ -16,6 +16,7 @@
 #include <stdint.h>
 
 #include "main.h"
+#include "cmsis_os.h"
 #include "board.h"
 
 #define PLAUSIBILITY_THRESH 10
@@ -77,9 +78,7 @@ typedef struct {
 	TaskHandle_t bse_task;
 	TaskHandle_t bppc_task;
 	TaskHandle_t canbus_task;
-	TaskHandle_t acc_task;
 	TaskHandle_t dashboard_task;
-	TaskHandle_t cool_task;
 
 } app_data_t;
 
@@ -90,4 +89,3 @@ void set_buzzer(bool state);
 void set_brakelight(bool state);
 
 #endif
-

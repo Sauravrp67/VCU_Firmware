@@ -25,6 +25,7 @@ typedef struct {
 	float percent;
 
 	ADC_HandleTypeDef *handle;
+	uint8_t channel;
 } pressure_sensor_t;
 
 //Function Prototypes

@@ -1,10 +1,10 @@
+#include <assert.h>
 #include <string.h>
 
 #include "app.h"
 #include "tasks/bse_task.h"
 #include "tasks/rtd_task.h"
 #include "tasks/error_task.h"
-#include "tasks/bse_task.h"
 #include "tasks/bppc_task.h"
 #include "tasks/apps_task.h"
 #include "tasks/canbus_task.h"
@@ -49,27 +49,38 @@ void app_create()
 //	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
 	HAL_CAN_ActivateNotification(app.board.canbus.hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
 
-	assert(app.cli_task = cli_task_start(&app));
-	assert(app.rtd_task = rtd_task_start(&app));
-	assert(app.error_task = error_task_start(&app));
-	assert(app.canbus_task = canbus_task_start(&app));
-	assert(app.bse_task = bse_task_start(&app));
-	assert(app.apps_task = apps_task_start(&app));
-	assert(app.bppc_task = bppc_task_start(&app));
-	assert(app.acc_task = acc_task_start(&app));
-	assert(app.dashboard_task = dashboard_task_start(&app));
-	assert(app.cool_task = cool_task_start(&app));
+	app.cli_task = cli_task_start(&app);
+	assert(app.cli_task != NULL);
+	app.rtd_task = rtd_task_start(&app);
+	assert(app.rtd_task != NULL);
+	app.error_task = error_task_start(&app);
+	assert(app.error_task != NULL);
+	app.canbus_task = canbus_task_start(&app);
+	assert(app.canbus_task != NULL);
+	app.bse_task = bse_task_start(&app);
+	assert(app.bse_task != NULL);
+	app.apps_task = apps_task_start(&app);
+	assert(app.apps_task != NULL);
+	app.bppc_task = bppc_task_start(&app);
+	assert(app.bppc_task != NULL);
+	app.dashboard_task = dashboard_task_start(&app);
+	assert(app.dashboard_task != NULL);
+}
+
+void cli_putline(char *line)
+{
+	cli_printline(&app.board.cli, line);
 }
 
 void set_fw(bool state)
 {
 	app.fw_state = state;
-	HAL_GPIO_WritePin(Firmware_Ok_GPIO_Port, Firmware_Ok_Pin, state);
+	HAL_GPIO_WritePin(SDC_OP_GPIO_Port, SDC_OP_Pin, state);
 }
 
 void set_buzzer(bool state)
 {
-	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, state);
+	HAL_GPIO_WritePin(RTD_OUTPUT_GPIO_Port, RTD_OUTPUT_Pin, state);
 }
 
 void set_brakelight(bool state)

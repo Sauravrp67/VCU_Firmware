@@ -18,7 +18,7 @@ long double map(long x, long in_min, long in_max, long out_min, long out_max)
 	long in_range = in_max - in_min;
 	long out_range = out_max - out_min;
 
-	if (in_range == 0) return out_min + (long double)output_range/2;
+	if (in_range == 0) return out_min + (long double)out_range / 2;
 	long double num = (x - in_min) * out_range;
 
 	if(out_range >= 0)

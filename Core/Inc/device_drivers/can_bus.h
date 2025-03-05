@@ -16,6 +16,7 @@
 #include "stm32f1xx_hal.h"
 
 #define DATALEN 8
+#define CANBUS_APPS (1UL << 0)
 
 typedef struct {
 	uint32_t id;

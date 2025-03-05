@@ -324,4 +324,3 @@ VP_SYS_VS_tim3.Signal=SYS_VS_tim3
 board=NUCLEO-F103RB
 boardIOC=true
 rtos.0.ip=FREERTOS
-isbadioc=true
