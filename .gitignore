@@ -19,3 +19,9 @@ Release/
 .settings/*.bak
 
 compile_commands.json
+
+# STM32CubeIDE / Eclipse project state (CMake is the build of record; .ioc kept for pin config)
+.cproject
+.project
+.mxproject
+.settings/
