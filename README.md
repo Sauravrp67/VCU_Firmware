@@ -1,5 +1,7 @@
 # VCU Firmware
 
+[![ci](https://github.com/Sauravrp67/VCU_Firmware/actions/workflows/ci.yml/badge.svg)](https://github.com/Sauravrp67/VCU_Firmware/actions/workflows/ci.yml)
+
 Firmware for an STM32F103RB-based **Vehicle Control Unit (VCU)** for a Formula
 Bharat 2025 / FSAE-EV electric race car. The VCU acquires the pedal sensors,
 enforces the FSAE-EV plausibility and shutdown rules, runs the Ready-To-Drive
@@ -75,8 +77,18 @@ ctest --test-dir build/test --output-on-failure
 Tests cover the FSAE-EV safety invariants: APPS 10 % / 100 ms plausibility incl.
 open-circuit and idle-gated recovery, the brake-throttle 25 % / 5 % latch,
 CAN-timeout -> zero-torque, torque clamp / no-reverse, RTD entry gating + 1-3 s
-buzzer, and the pre-charge >= 90 % gate. Both the firmware build and the host
-tests run in CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+buzzer, and the pre-charge >= 90 % gate.
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs three jobs on
+every push/PR: the **firmware build** (debug + release, `-Werror`, uploads the
+`.hex`/`.bin`), the **host tests** (with a gcovr line-coverage gate — currently
+~98 % of `control/`+`safety/`+`proto/`, failing under 90 %), and **lint**
+(`clang-format` + `clang-tidy`). Format and lint can be run locally:
+
+```sh
+./scripts/format.sh check     # or: ./scripts/format.sh fix
+clang-tidy Core/control/*.c Core/safety/*.c Core/proto/*.c -- -I Core -std=c11
+```
 
 ## Flash
 

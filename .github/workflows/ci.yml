@@ -1,11 +1,11 @@
-name: firmware-build
+name: ci
 
 on:
   push:
   pull_request:
 
 jobs:
-  cmake:
+  firmware-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,18 +19,55 @@ jobs:
         run: ./scripts/build.sh release
       - name: Report release size
         run: ./scripts/size.sh release
+      - name: Upload firmware images
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcu-firmware-release
+          path: |
+            build/release/VCU_Firmware.elf
+            build/release/VCU_Firmware.hex
+            build/release/VCU_Firmware.bin
+            build/release/VCU_Firmware.map
+          if-no-files-found: error
 
   host-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install host toolchain
+      - name: Install host toolchain + gcovr
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends gcc cmake make
-      - name: Configure host unit tests
-        run: cmake -S test -B build/test
-      - name: Build host unit tests
+          pip install --quiet gcovr
+      - name: Configure (coverage on)
+        run: cmake -S test -B build/test -DVCU_COVERAGE=ON
+      - name: Build host tests
         run: cmake --build build/test
-      - name: Run host unit tests
+      - name: Run host tests
         run: ctest --test-dir build/test --output-on-failure
+      - name: Coverage report (fail under 90% lines)
+        run: |
+          gcovr --root . --filter 'Core/(control|safety|proto)/' \
+                --fail-under-line 90 --print-summary \
+                --html-details build/test/coverage.html build/test
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: build/test/coverage*.html
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang tooling
+        # Pin clang-format so its output matches the version the tree was
+        # formatted with (idempotent gate); clang-tidy tracks latest.
+        run: pip install --quiet "clang-format==22.1.5" clang-tidy
+      - name: clang-format (hand-written sources)
+        run: ./scripts/format.sh check
+      - name: clang-tidy (hardware-free modules)
+        run: >
+          clang-tidy --warnings-as-errors='*'
+          Core/control/*.c Core/safety/*.c Core/proto/*.c
+          -- -I Core -std=c11
