@@ -42,6 +42,10 @@ void dashboard_task_fn(void *arg)
 		snprintf(dash->line, DASH_LINESZ, "hard_fault %d" NEWLINE,
 		         (int)fault_is_hard(&data->faults));
 		ret |= dashboard_write(dash, dash->line);
+		speed_sensor_update(&data->board.speed, 1000u / DASH_FREQ);
+		snprintf(dash->line, DASH_LINESZ, "speed_hz %d" NEWLINE,
+		         (int)data->board.speed.hz);
+		ret |= dashboard_write(dash, dash->line);
 		// Additional metrics can be added after dashboard hardware validation.
 		if(ret != HAL_OK)
 			fault_set(&data->faults, FAULT_DASHBOARD);

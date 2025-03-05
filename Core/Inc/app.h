@@ -57,6 +57,7 @@ typedef struct {
 	int throttle;            /* derived APPS travel, 0..100 */
 	int brake;               /* derived BSE travel, 0..100 */
 	int16_t torque_cmd;      /* clamped torque command (sent over CAN, Step 6) */
+	volatile float dc_bus_pct; /* AMS DC-bus % of accumulator (CAN RX; §5.4 gate) */
 
 	/* Hardware-free module state (the single owners of safety decisions). */
 	apps_state_t   apps_state;   /* §5.1 APPS plausibility + recovery */

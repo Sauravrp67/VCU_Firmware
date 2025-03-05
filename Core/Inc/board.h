@@ -21,6 +21,7 @@
 #include "device_drivers/map.h"
 #include "device_drivers/pot.h"
 #include "device_drivers/pressure_sense.h"
+#include "device_drivers/speed_sensor.h"
 #include "device_drivers/cli.h"
 
 #define BSE_MIN 200
@@ -43,6 +44,7 @@ typedef struct {
 	canbus_t canbus;
 	dashboard_t dashboard;
 	current_sensor_t currentSensor;
+	speed_sensor_t speed;
 	cli_t cli;
 } board_t;
 

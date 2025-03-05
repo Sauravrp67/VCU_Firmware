@@ -11,4 +11,5 @@ void board_init(board_t *dev)
 	canbus_device_init(&dev->canbus, &dev->stm32f103.hcan1, &dev->stm32f103.can1_tx_header);
 	cli_device_init(&dev->cli, &dev->stm32f103.huart2);
 	dashboard_init(&dev->dashboard, &dev->stm32f103.huart1);
+	speed_sensor_init(&dev->speed);
 }

@@ -38,8 +38,13 @@ not the reverse. The spec itself flags §3 as an unvalidated transcription.
   timer input-capture pin, not ADC.
 - **As-built reality:** PC2 is **not configured anywhere** — no GPIO, ADC, or
   timer. Speed sensing is unimplemented.
-- **Decision:** Implement as a **timer input-capture** (hall/frequency pulse) —
-  new `drivers/timer_capture` + speed task.
+- **Decision:** Implement as a hall/frequency pulse input. ⚠ **Hardware
+  constraint discovered:** on the STM32F103, **PC2 has no timer-channel
+  alternate function** (it is ADC_IN12 / EXTI2 only) — true timer input-capture
+  is impossible on this pin. Implemented instead as **EXTI2 rising-edge counting**
+  over a fixed window (`device_drivers/speed_sensor`), computed in the dashboard
+  task. For higher precision at speed, move the sensor to a timer-capable pin or
+  add a free-running timer base. (Step 7.)
 
 ### 7.4 — RTD signal line
 - **Spec §3/§7.4:** RTD on PC4, digital-or-analog unresolved.

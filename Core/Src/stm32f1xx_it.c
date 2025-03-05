@@ -56,6 +56,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
+extern CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN EV */
 
@@ -185,6 +186,22 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
 
   /* USER CODE END EXTI15_10_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line2 interrupt (speed sensor, PC2).
+  */
+void EXTI2_IRQHandler(void)
+{
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+}
+
+/**
+  * @brief This function handles USB low-priority / CAN1 RX0 interrupts.
+  */
+void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+  HAL_CAN_IRQHandler(&hcan);
 }
 
 /* USER CODE BEGIN 1 */

@@ -49,6 +49,7 @@ add_executable(${PROJECT_NAME}
     Core/Src/device_drivers/map.c
     Core/Src/device_drivers/pot.c
     Core/Src/device_drivers/pressure_sense.c
+    Core/Src/device_drivers/speed_sensor.c
     Core/Src/device_drivers/stm32f103.c
     Core/Src/tasks/safety_task.c
     Core/Src/tasks/canbus_task.c
