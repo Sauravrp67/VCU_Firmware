@@ -12,7 +12,11 @@ Checks: >
   -readability-identifier-length,
   -readability-magic-numbers,
   -readability-braces-around-statements,
+  -readability-uppercase-literal-suffix,
+  -readability-isolate-declaration,
+  -readability-implicit-bool-conversion,
   -misc-no-recursion,
+  -misc-include-cleaner,
   -bugprone-easily-swappable-parameters
 WarningsAsErrors: ''
 HeaderFilterRegex: 'Core/(control|safety|proto|app|drivers|bsp)/.*'
