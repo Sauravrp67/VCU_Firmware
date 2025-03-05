@@ -1,13 +1,13 @@
 /**
-* @file app.h
-* @author Saurav Raj Paudel
-* @brief
-* @version 0.1
-* @date 2025-01-10
-*
-* @copyright Copyright (c) 2025
-*
-*/
+ * @file app.h
+ * @author Saurav Raj Paudel
+ * @brief
+ * @version 0.1
+ * @date 2025-01-10
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
 
 #ifndef __APP_H_
 #define __APP_H_
@@ -37,40 +37,41 @@
 /* The safety-critical loop (APPS/BSE acquisition + plausibility + BPPC + fault
  * manager + SDC + IWDG) runs in one highest-priority task at SAFETY_FREQ so the
  * 100 ms plausibility window is detected with wide margin (§8). */
-#define SAFETY_FREQ 200   /* Hz -> 5 ms safety loop */
-#define DASH_FREQ 5
-#define CLI_FREQ 10
+#define SAFETY_FREQ 200 /* Hz -> 5 ms safety loop */
+#define DASH_FREQ   5
+#define CLI_FREQ    10
 
 /* Priorities (higher number = more urgent). */
-#define SAFETY_PRIO 24    /* highest user task */
-#define RTD_PRIO 16
-#define CLI_PRIO 15
-#define CAN_PRIO 14
-#define DASH_PRIO 4
+#define SAFETY_PRIO 24 /* highest user task */
+#define RTD_PRIO    16
+#define CLI_PRIO    15
+#define CAN_PRIO    14
+#define DASH_PRIO   4
 
 /* CAN command watchdog (§5.7): leave DISARMED until the real inverter heartbeat
  * ID replaces the placeholder in proto/can_catalog.h. Arming it with a
  * placeholder ID would never be fed and would force permanent zero-torque. */
 #define CAN_WATCHDOG_ARMED 0
 
-typedef struct {
-	int throttle;            /* derived APPS travel, 0..100 */
-	int brake;               /* derived BSE travel, 0..100 */
-	int16_t torque_cmd;      /* clamped torque command (sent over CAN, Step 6) */
+typedef struct
+{
+	int throttle;              /* derived APPS travel, 0..100 */
+	int brake;                 /* derived BSE travel, 0..100 */
+	int16_t torque_cmd;        /* clamped torque command (sent over CAN, Step 6) */
 	volatile float dc_bus_pct; /* AMS DC-bus % of accumulator (CAN RX; §5.4 gate) */
 
 	/* Hardware-free module state (the single owners of safety decisions). */
-	apps_state_t   apps_state;   /* §5.1 APPS plausibility + recovery */
-	bppc_state_t   bppc_state;   /* §5.2 brake-throttle latch */
-	fault_mgr_t    faults;       /* single fault registry; only error_task acts on it */
-	can_watchdog_t can_wd;       /* §5.7 CAN command watchdog */
-	vcu_state_t    vcu_state;    /* TS-Off -> ... -> Drive state machine */
+	apps_state_t apps_state; /* §5.1 APPS plausibility + recovery */
+	bppc_state_t bppc_state; /* §5.2 brake-throttle latch */
+	fault_mgr_t faults;      /* single fault registry; only error_task acts on it */
+	can_watchdog_t can_wd;   /* §5.7 CAN command watchdog */
+	vcu_state_t vcu_state;   /* TS-Off -> ... -> Drive state machine */
 
 	/* Inputs / actuator status. */
-	bool fw_state;           /* commanded SDC output state (1 = closed) */
-	bool tsal;               /* tractive-system-active (AIR status) input */
-	bool rtd_button;         /* RTD driver-action button */
-	bool brakelight;         /* brake-light output state */
+	bool fw_state;   /* commanded SDC output state (1 = closed) */
+	bool tsal;       /* tractive-system-active (AIR status) input */
+	bool rtd_button; /* RTD driver-action button */
+	bool brakelight; /* brake-light output state */
 
 	board_t board;
 

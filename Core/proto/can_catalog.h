@@ -23,19 +23,19 @@
 #define CAN_DLC 8
 
 /* replace with the real values of the hardware. */
-#define CAN_ID_VCU_TORQUE_CMD  0x100u  /* VCU -> inverter torque command   */
-#define CAN_ID_INVERTER_HB     0x200u  /* inverter status heartbeat (§5.7) */
-#define CAN_ID_AMS_DCBUS       0x300u  /* AMS DC-bus voltage (§5.4)         */
+#define CAN_ID_VCU_TORQUE_CMD 0x100u /* VCU -> inverter torque command   */
+#define CAN_ID_INVERTER_HB    0x200u /* inverter status heartbeat (§5.7) */
+#define CAN_ID_AMS_DCBUS      0x300u /* AMS DC-bus voltage (§5.4)         */
 
 /* PLACEHOLDER torque encoding: signed 16-bit, 1 unit/LSB, little-endian in
  * bytes [0..1]; remaining bytes zero. Confirm resolution + endianness. */
-void    can_encode_torque_cmd(uint8_t buf[CAN_DLC], int16_t torque_cmd);
+void can_encode_torque_cmd(uint8_t buf[CAN_DLC], int16_t torque_cmd);
 int16_t can_decode_torque_cmd(const uint8_t buf[CAN_DLC]);
 
 /* PLACEHOLDER AMS DC-bus percent-of-accumulator decode: byte 0 = percent. */
-float   can_decode_dc_bus_pct(const uint8_t buf[CAN_DLC]);
+float can_decode_dc_bus_pct(const uint8_t buf[CAN_DLC]);
 
 /* Recognize the inverter heartbeat frame (feeds the CAN command watchdog). */
-bool    can_is_inverter_heartbeat(uint32_t id);
+bool can_is_inverter_heartbeat(uint32_t id);
 
 #endif /* PROTO_CAN_CATALOG_H */

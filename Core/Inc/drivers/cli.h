@@ -7,24 +7,26 @@
 #include "stm32f1xx_hal.h"
 
 #define CLI_LINESZ 256
-#define MAXTOKS (CLI_LINESZ / 2)
+#define MAXTOKS    (CLI_LINESZ / 2)
 
-typedef struct {
-    uint8_t c;
-    unsigned int index;
+typedef struct
+{
+	uint8_t c;
+	unsigned int index;
 	UART_HandleTypeDef *huart;
-    bool msg_pending;
-    unsigned int msg_count;
-    unsigned int msg_proc;
-    unsigned int msg_valid;
-    char line[CLI_LINESZ];
-    HAL_StatusTypeDef ret;
+	bool msg_pending;
+	unsigned int msg_count;
+	unsigned int msg_proc;
+	unsigned int msg_valid;
+	char line[CLI_LINESZ];
+	HAL_StatusTypeDef ret;
 } cli_t;
 
-typedef struct {
-    char *name;
-    int (*func)(int argc, char *argv[]);
-    char *desc;
+typedef struct
+{
+	char *name;
+	int (*func)(int argc, char *argv[]);
+	char *desc;
 } command_t;
 
 void cli_device_init(cli_t *dev, UART_HandleTypeDef *huart);

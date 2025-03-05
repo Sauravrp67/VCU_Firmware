@@ -16,12 +16,13 @@
 #include <stdbool.h>
 
 /* §5.2 thresholds (pedal travel percentages). */
-#define BPPC_BRAKE_THRESH_PCT   10.0f  /* brake considered actuated above this */
-#define BPPC_APPS_HIGH_PCT      25.0f  /* throttle that triggers the latch       */
-#define BPPC_APPS_LOW_PCT        5.0f  /* throttle below this clears the latch    */
+#define BPPC_BRAKE_THRESH_PCT 10.0f /* brake considered actuated above this */
+#define BPPC_APPS_HIGH_PCT    25.0f /* throttle that triggers the latch       */
+#define BPPC_APPS_LOW_PCT     5.0f  /* throttle below this clears the latch    */
 
-typedef struct {
-	bool latched;  /* true => torque cut, awaiting APPS < 5% to clear */
+typedef struct
+{
+	bool latched; /* true => torque cut, awaiting APPS < 5% to clear */
 } bppc_state_t;
 
 void bppc_state_init(bppc_state_t *st);

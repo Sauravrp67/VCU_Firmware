@@ -14,7 +14,8 @@
 
 #include <stdint.h>
 
-typedef struct {
+typedef struct
+{
 	volatile uint32_t pulses; /* edge count since the last update (ISR-incremented) */
 	float hz;                 /* most recent computed pulse frequency */
 } speed_sensor_t;

@@ -4,10 +4,10 @@
 
 static void test_rtd_entry_requires_ts_brake_and_button(void)
 {
-	CHECK_FALSE(rtd_entry_allowed(false, true,  true));  /* TS not active */
-	CHECK_FALSE(rtd_entry_allowed(true,  false, true));  /* no brake */
-	CHECK_FALSE(rtd_entry_allowed(true,  true,  false)); /* no button */
-	CHECK_TRUE (rtd_entry_allowed(true,  true,  true));  /* all present */
+	CHECK_FALSE(rtd_entry_allowed(false, true, true)); /* TS not active */
+	CHECK_FALSE(rtd_entry_allowed(true, false, true)); /* no brake */
+	CHECK_FALSE(rtd_entry_allowed(true, true, false)); /* no button */
+	CHECK_TRUE(rtd_entry_allowed(true, true, true));   /* all present */
 }
 
 static void test_buzzer_duration_within_1_to_3s(void)
@@ -23,8 +23,8 @@ static void test_precharge_gate_at_90pct(void)
 {
 	CHECK_FALSE(precharge_complete(0.0f));
 	CHECK_FALSE(precharge_complete(89.9f));
-	CHECK_TRUE (precharge_complete(90.0f));
-	CHECK_TRUE (precharge_complete(99.0f));
+	CHECK_TRUE(precharge_complete(90.0f));
+	CHECK_TRUE(precharge_complete(99.0f));
 }
 
 int main(void)

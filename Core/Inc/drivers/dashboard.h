@@ -1,13 +1,13 @@
 /**
-* @file dashboard.h
-* @author Saurav Raj Paudel
-* @brief
-* @version 0.1
-* @date 2025-01-10
-*
-* @copyright Copyright (c) 2025
-*
-*/
+ * @file dashboard.h
+ * @author Saurav Raj Paudel
+ * @brief
+ * @version 0.1
+ * @date 2025-01-10
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
 
 #ifndef __DASHBOARD_H_
 #define __DASHBOARD_H_

@@ -18,20 +18,21 @@
 #include <stdint.h>
 
 /* §5.4 — DC-bus must reach this fraction of accumulator voltage before AIR#2. */
-#define PRECHARGE_MIN_PCT      90.0f
+#define PRECHARGE_MIN_PCT 90.0f
 
 /* §5.5 — RTD buzzer sound duration. Must be within [1000, 3000] ms (1-3 s). */
-#define RTD_BUZZER_MS_MIN      1000u
-#define RTD_BUZZER_MS_MAX      3000u
-#define RTD_BUZZER_MS          3000u   /* preserves the as-built 3 s (upper bound) */
+#define RTD_BUZZER_MS_MIN 1000u
+#define RTD_BUZZER_MS_MAX 3000u
+#define RTD_BUZZER_MS     3000u /* preserves the as-built 3 s (upper bound) */
 
-typedef enum {
-	VCU_STATE_TS_OFF = 0,  /* tractive system off */
-	VCU_STATE_TS_ACTIVE,   /* AIRs/precharge engaged, not yet driving */
-	VCU_STATE_PRECHARGE,   /* pre-charging DC bus toward >= 90% */
-	VCU_STATE_RTD,         /* ready-to-drive: buzzer done, torque enabled */
-	VCU_STATE_DRIVE,       /* actively responding to APPS */
-	VCU_STATE_FAULT,       /* latched fault: fail-safe zero-torque */
+typedef enum
+{
+	VCU_STATE_TS_OFF = 0, /* tractive system off */
+	VCU_STATE_TS_ACTIVE,  /* AIRs/precharge engaged, not yet driving */
+	VCU_STATE_PRECHARGE,  /* pre-charging DC bus toward >= 90% */
+	VCU_STATE_RTD,        /* ready-to-drive: buzzer done, torque enabled */
+	VCU_STATE_DRIVE,      /* actively responding to APPS */
+	VCU_STATE_FAULT,      /* latched fault: fail-safe zero-torque */
 } vcu_state_t;
 
 /** §5.5 — driver-action gate to enter RTD. */

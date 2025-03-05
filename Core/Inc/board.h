@@ -28,14 +28,15 @@
 
 #define BSE_ADC_CH 13
 
-#define APPS1_0 200
+#define APPS1_0   200
 #define APPS1_100 300
-#define APPS2_0 200
+#define APPS2_0   200
 #define APPS2_100 300
 
 #define CANBUS_ISR 0x2
 
-typedef struct {
+typedef struct
+{
 	stm32f103_t stm32f103;
 	pot_t apps1;
 	pot_t apps2;

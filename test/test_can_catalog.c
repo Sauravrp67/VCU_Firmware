@@ -8,7 +8,8 @@ static void test_torque_roundtrip(void)
 {
 	uint8_t buf[CAN_DLC];
 	int16_t vals[] = {0, 1, 160, -1, -160, 32767, -32768};
-	for (unsigned i = 0; i < sizeof(vals)/sizeof(vals[0]); i++) {
+	for (unsigned i = 0; i < sizeof(vals) / sizeof(vals[0]); i++)
+	{
 		can_encode_torque_cmd(buf, vals[i]);
 		CHECK_EQ_INT(can_decode_torque_cmd(buf), vals[i]);
 	}

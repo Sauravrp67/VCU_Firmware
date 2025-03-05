@@ -2,45 +2,45 @@
 #include "main.h"
 
 /**
-* @brief Actual RTD task function
-*
-* @param arg App_data struct pointer converted to void pointer
-*/
+ * @brief Actual RTD task function
+ *
+ * @param arg App_data struct pointer converted to void pointer
+ */
 void rtd_task_fn(void *arg);
 
 #define RTD_STACK_WORDS 128
 TaskHandle_t rtd_task_start(app_data_t *data)
 {
-   static StackType_t stack[RTD_STACK_WORDS];
-   static StaticTask_t tcb;
-   /* Fixed: was a literal priority 20; use RTD_PRIO. */
-   return xTaskCreateStatic(rtd_task_fn, "RTD task", RTD_STACK_WORDS,
-                            (void *)data, RTD_PRIO, stack, &tcb);
+	static StackType_t stack[RTD_STACK_WORDS];
+	static StaticTask_t tcb;
+	/* Fixed: was a literal priority 20; use RTD_PRIO. */
+	return xTaskCreateStatic(rtd_task_fn, "RTD task", RTD_STACK_WORDS, (void *)data, RTD_PRIO,
+	                         stack, &tcb);
 }
 
 void rtd_task_fn(void *arg)
 {
-    app_data_t *data = (app_data_t *)arg;
-    const uint32_t period = 50; /* ms */
-    uint32_t buzzer_start = 0;
+	app_data_t *data = (app_data_t *)arg;
+	const uint32_t period = 50; /* ms */
+	uint32_t buzzer_start = 0;
 
-	for(;;)
+	for (;;)
 	{
 		data->tsal = HAL_GPIO_ReadPin(AIR_Status_GPIO_Port, AIR_Status_Pin);
 		data->rtd_button = HAL_GPIO_ReadPin(RTD_Input_GPIO_Port, RTD_Input_Pin);
 
 		// A hard fault forces the fail-safe state from anywhere. The SDC itself
 		// is driven by the fault manager (error_task), not here.
-		if(fault_is_hard(&data->faults))
+		if (fault_is_hard(&data->faults))
 		{
 			set_buzzer(0);
 			data->vcu_state = VCU_STATE_FAULT;
 		}
 
-		switch(data->vcu_state)
+		switch (data->vcu_state)
 		{
 		case VCU_STATE_FAULT:
-			if(!fault_is_hard(&data->faults))
+			if (!fault_is_hard(&data->faults))
 				data->vcu_state = VCU_STATE_TS_OFF;
 			break;
 
@@ -49,17 +49,17 @@ void rtd_task_fn(void *arg)
 			// AIRs closed (tsal) => external pre-charge complete. Pre-charge
 			// voltage gating (precharge_complete(), §5.4) is wired once the AMS
 			// reports DC-bus voltage over CAN (Step 6).
-			if(data->tsal)
+			if (data->tsal)
 				data->vcu_state = VCU_STATE_TS_ACTIVE;
 			break;
 
 		case VCU_STATE_TS_ACTIVE:
-			if(!data->tsal)
+			if (!data->tsal)
 			{
 				data->vcu_state = VCU_STATE_TS_OFF;
 			}
 			// §5.5 (EV.10.4.3): TS active AND brake-inclusive driver action.
-			else if(rtd_entry_allowed(data->tsal, data->brakelight, data->rtd_button))
+			else if (rtd_entry_allowed(data->tsal, data->brakelight, data->rtd_button))
 			{
 				set_buzzer(1);
 				buzzer_start = osKernelGetTickCount();
@@ -69,12 +69,12 @@ void rtd_task_fn(void *arg)
 
 		case VCU_STATE_RTD:
 			// §5.5: sound the buzzer 1-3 s, non-blocking, then enter Drive.
-			if(!data->tsal || !data->rtd_button)
+			if (!data->tsal || !data->rtd_button)
 			{
 				set_buzzer(0);
 				data->vcu_state = VCU_STATE_TS_OFF;
 			}
-			else if((osKernelGetTickCount() - buzzer_start) >= RTD_BUZZER_MS)
+			else if ((osKernelGetTickCount() - buzzer_start) >= RTD_BUZZER_MS)
 			{
 				set_buzzer(0);
 				data->vcu_state = VCU_STATE_DRIVE;
@@ -83,7 +83,7 @@ void rtd_task_fn(void *arg)
 
 		case VCU_STATE_DRIVE:
 			// Ready to drive: torque responds to APPS (gated by the fault mgr).
-			if(!data->tsal || !data->rtd_button)
+			if (!data->tsal || !data->rtd_button)
 				data->vcu_state = VCU_STATE_TS_OFF;
 			break;
 

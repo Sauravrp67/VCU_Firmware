@@ -16,10 +16,10 @@
 /* §5.7 — maximum commanded torque (inverter command units). Proxy for the
  * rulebook power cap (e.g. 80 kW); confirm scaling against the inverter's CAN
  * torque-command resolution when the catalog is finalized. */
-#define TORQUE_MAX_CMD   160
+#define TORQUE_MAX_CMD 160
 
 /* No reverse: the floor is always zero. */
-#define TORQUE_MIN_CMD   0
+#define TORQUE_MIN_CMD 0
 
 /** Clamp a raw torque command to [TORQUE_MIN_CMD, TORQUE_MAX_CMD] (no reverse). */
 int16_t torque_clamp(int16_t requested);

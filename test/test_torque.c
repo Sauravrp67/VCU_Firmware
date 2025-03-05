@@ -22,7 +22,7 @@ static void test_throttle_to_torque_mapping(void)
 	CHECK_EQ_INT(torque_from_throttle_pct(0.0f), 0);
 	CHECK_EQ_INT(torque_from_throttle_pct(100.0f), TORQUE_MAX_CMD);
 	CHECK_EQ_INT(torque_from_throttle_pct(50.0f), TORQUE_MAX_CMD / 2);
-	CHECK_EQ_INT(torque_from_throttle_pct(-10.0f), 0);          /* no reverse */
+	CHECK_EQ_INT(torque_from_throttle_pct(-10.0f), 0);              /* no reverse */
 	CHECK_EQ_INT(torque_from_throttle_pct(150.0f), TORQUE_MAX_CMD); /* saturated */
 }
 

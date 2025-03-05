@@ -9,7 +9,6 @@
 #include "app/dashboard_task.h"
 #include "proto/can_catalog.h"
 
-
 app_data_t app = {0};
 
 void app_create()
@@ -32,7 +31,7 @@ void app_create()
 
 	board_init(&app.board);
 
-//	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
+	//	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
 	HAL_NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 5, 0);
 	HAL_NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
 	HAL_CAN_ActivateNotification(app.board.canbus.hcan, CAN_IT_RX_FIFO0_MSG_PENDING);

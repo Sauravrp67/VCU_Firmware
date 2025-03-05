@@ -13,7 +13,8 @@ static void test_throttle_is_mean_and_clamped(void)
 
 static void test_plausible_when_in_agreement(void)
 {
-	apps_state_t st; apps_state_init(&st);
+	apps_state_t st;
+	apps_state_init(&st);
 	/* 5% apart (< 10%) for a long time stays plausible. */
 	for (int i = 0; i < 100; i++)
 		CHECK_TRUE(apps_plausibility_update(&st, 50.0f, 55.0f, 10u));
@@ -21,7 +22,8 @@ static void test_plausible_when_in_agreement(void)
 
 static void test_deviation_under_100ms_is_tolerated(void)
 {
-	apps_state_t st; apps_state_init(&st);
+	apps_state_t st;
+	apps_state_init(&st);
 	/* 20% apart but only for 100 ms total -> not yet latched (limit is >100ms). */
 	CHECK_TRUE(apps_plausibility_update(&st, 30.0f, 60.0f, 50u)); /* 50ms */
 	CHECK_TRUE(apps_plausibility_update(&st, 30.0f, 60.0f, 50u)); /* 100ms */
@@ -31,7 +33,8 @@ static void test_deviation_under_100ms_is_tolerated(void)
 
 static void test_persistent_deviation_cuts_torque(void)
 {
-	apps_state_t st; apps_state_init(&st);
+	apps_state_t st;
+	apps_state_init(&st);
 	CHECK_TRUE(apps_plausibility_update(&st, 10.0f, 90.0f, 100u)); /* exactly 100 */
 	CHECK_FALSE(apps_plausibility_update(&st, 10.0f, 90.0f, 1u));  /* > 100 -> cut */
 	/* Latches: even a brief agreement at non-idle keeps it cut. */
@@ -40,9 +43,10 @@ static void test_persistent_deviation_cuts_torque(void)
 
 static void test_open_circuit_is_implausible(void)
 {
-	apps_state_t st; apps_state_init(&st);
-	CHECK_FALSE(apps_signal_in_range(150.0f));  /* shorted high */
-	CHECK_FALSE(apps_signal_in_range(-50.0f));  /* open/floating low */
+	apps_state_t st;
+	apps_state_init(&st);
+	CHECK_FALSE(apps_signal_in_range(150.0f)); /* shorted high */
+	CHECK_FALSE(apps_signal_in_range(-50.0f)); /* open/floating low */
 	CHECK_TRUE(apps_signal_in_range(0.0f));
 	CHECK_TRUE(apps_signal_in_range(100.0f));
 	/* An out-of-range channel, even with matching values, trips after 100 ms. */
@@ -52,7 +56,8 @@ static void test_open_circuit_is_implausible(void)
 
 static void test_recovery_requires_agreement_and_idle(void)
 {
-	apps_state_t st; apps_state_init(&st);
+	apps_state_t st;
+	apps_state_init(&st);
 	/* Latch a fault. */
 	apps_plausibility_update(&st, 10.0f, 90.0f, 200u);
 	CHECK_FALSE(apps_plausibility_update(&st, 10.0f, 90.0f, 10u));

@@ -11,8 +11,10 @@ void apps_state_init(apps_state_t *st)
 float apps_throttle_pct(float apps1_pct, float apps2_pct)
 {
 	float t = (apps1_pct + apps2_pct) * 0.5f;
-	if (t < 0.0f) t = 0.0f;
-	if (t > 100.0f) t = 100.0f;
+	if (t < 0.0f)
+		t = 0.0f;
+	if (t > 100.0f)
+		t = 100.0f;
 	return t;
 }
 
@@ -21,8 +23,7 @@ bool apps_signal_in_range(float pct)
 	return (pct >= APPS_SIGNAL_MIN_PCT) && (pct <= APPS_SIGNAL_MAX_PCT);
 }
 
-bool apps_plausibility_update(apps_state_t *st, float apps1_pct, float apps2_pct,
-                              uint32_t dt_ms)
+bool apps_plausibility_update(apps_state_t *st, float apps1_pct, float apps2_pct, uint32_t dt_ms)
 {
 	bool in_range = apps_signal_in_range(apps1_pct) && apps_signal_in_range(apps2_pct);
 	bool deviating = fabsf(apps1_pct - apps2_pct) > APPS_PLAUSIBILITY_THRESH_PCT;
@@ -45,8 +46,7 @@ bool apps_plausibility_update(apps_state_t *st, float apps1_pct, float apps2_pct
 
 		/* §5.1 recovery: signals agree (in_range && !deviating, satisfied here)
 		 * AND pedal released to idle. */
-		if (st->torque_inhibited &&
-		    apps1_pct <= APPS_IDLE_PCT && apps2_pct <= APPS_IDLE_PCT)
+		if (st->torque_inhibited && apps1_pct <= APPS_IDLE_PCT && apps2_pct <= APPS_IDLE_PCT)
 		{
 			st->torque_inhibited = false;
 		}

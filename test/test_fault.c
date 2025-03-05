@@ -4,7 +4,8 @@
 
 static void test_hard_fault_inhibits_torque_and_opens_sdc(void)
 {
-	fault_mgr_t m; fault_init(&m);
+	fault_mgr_t m;
+	fault_init(&m);
 	CHECK_FALSE(fault_is_hard(&m));
 	CHECK_FALSE(fault_torque_inhibited(&m));
 
@@ -15,15 +16,17 @@ static void test_hard_fault_inhibits_torque_and_opens_sdc(void)
 
 static void test_bppc_inhibits_torque_but_not_sdc(void)
 {
-	fault_mgr_t m; fault_init(&m);
+	fault_mgr_t m;
+	fault_init(&m);
 	fault_set(&m, FAULT_BPPC);
-	CHECK_FALSE(fault_is_hard(&m));       /* BPPC does not kill tractive system */
+	CHECK_FALSE(fault_is_hard(&m));         /* BPPC does not kill tractive system */
 	CHECK_TRUE(fault_torque_inhibited(&m)); /* but does cut torque */
 }
 
 static void test_soft_faults_do_not_inhibit_torque(void)
 {
-	fault_mgr_t m; fault_init(&m);
+	fault_mgr_t m;
+	fault_init(&m);
 	fault_set(&m, FAULT_CANBUS_TX);
 	fault_set(&m, FAULT_DASHBOARD);
 	fault_set(&m, FAULT_CLI);
@@ -33,7 +36,8 @@ static void test_soft_faults_do_not_inhibit_torque(void)
 
 static void test_faults_latch_until_cleared(void)
 {
-	fault_mgr_t m; fault_init(&m);
+	fault_mgr_t m;
+	fault_init(&m);
 	fault_set(&m, FAULT_BPPC);
 	CHECK_TRUE(fault_active(&m, FAULT_BPPC));
 	fault_clear(&m, FAULT_BPPC);
@@ -43,11 +47,14 @@ static void test_faults_latch_until_cleared(void)
 
 static void test_can_watchdog_times_out_and_forces_zero_torque(void)
 {
-	can_watchdog_t w; can_wd_init(&w);
-	fault_mgr_t m; fault_init(&m);
+	can_watchdog_t w;
+	can_wd_init(&w);
+	fault_mgr_t m;
+	fault_init(&m);
 
 	/* Fed regularly -> never times out. */
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++)
+	{
 		can_wd_on_rx(&w);
 		CHECK_FALSE(can_wd_update(&w, 50u)); /* 50ms < 100ms each interval */
 	}
@@ -55,7 +62,7 @@ static void test_can_watchdog_times_out_and_forces_zero_torque(void)
 	/* Silence beyond 100 ms -> timeout -> raise hard fault -> zero torque. */
 	can_wd_on_rx(&w);
 	CHECK_FALSE(can_wd_update(&w, 60u));
-	CHECK_TRUE(can_wd_update(&w, 60u));   /* 120ms since last rx -> timed out */
+	CHECK_TRUE(can_wd_update(&w, 60u)); /* 120ms since last rx -> timed out */
 	fault_set(&m, FAULT_CAN_TIMEOUT);
 	CHECK_TRUE(fault_is_hard(&m));
 	CHECK_TRUE(fault_torque_inhibited(&m));

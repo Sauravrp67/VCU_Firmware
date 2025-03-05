@@ -19,16 +19,16 @@ TaskHandle_t safety_task_start(app_data_t *data)
 {
 	static StackType_t stack[SAFETY_STACK_WORDS];
 	static StaticTask_t tcb;
-	return xTaskCreateStatic(safety_task_fn, "safety", SAFETY_STACK_WORDS,
-	                         (void *)data, SAFETY_PRIO, stack, &tcb);
+	return xTaskCreateStatic(safety_task_fn, "safety", SAFETY_STACK_WORDS, (void *)data,
+	                         SAFETY_PRIO, stack, &tcb);
 }
 
 void safety_task_fn(void *arg)
 {
 	app_data_t *data = (app_data_t *)arg;
 	stm32f103_t *mcu = &data->board.stm32f103;
-	pot_t *apps1 = &data->board.apps1;        /* PB0, ADC2 ch8  */
-	pot_t *apps2 = &data->board.apps2;        /* PC5, ADC1 ch15 */
+	pot_t *apps1 = &data->board.apps1;         /* PB0, ADC2 ch8  */
+	pot_t *apps2 = &data->board.apps2;         /* PC5, ADC1 ch15 */
 	pressure_sensor_t *bse = &data->board.bse; /* PC3, ADC1 ch13 */
 
 	const uint32_t period = 1000u / SAFETY_FREQ;
@@ -58,8 +58,7 @@ void safety_task_fn(void *arg)
 
 		/* --- Safety evaluation (all hardware-free, host-tested logic) --- */
 		// §5.1 APPS 10%/100ms plausibility incl. open-circuit + idle recovery
-		if (apps_plausibility_update(&data->apps_state,
-		                             apps1->percent, apps2->percent, period))
+		if (apps_plausibility_update(&data->apps_state, apps1->percent, apps2->percent, period))
 			fault_clear(&data->faults, FAULT_APPS);
 		else
 			fault_set(&data->faults, FAULT_APPS);

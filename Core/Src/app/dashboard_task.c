@@ -10,20 +10,20 @@ void dashboard_task_fn(void *arg);
 #define DASH_STACK_WORDS 256
 TaskHandle_t dashboard_task_start(app_data_t *data)
 {
-   static StackType_t stack[DASH_STACK_WORDS];
-   static StaticTask_t tcb;
-   return xTaskCreateStatic(dashboard_task_fn, "Dashboard task", DASH_STACK_WORDS,
-                            (void *)data, DASH_PRIO, stack, &tcb);
+	static StackType_t stack[DASH_STACK_WORDS];
+	static StaticTask_t tcb;
+	return xTaskCreateStatic(dashboard_task_fn, "Dashboard task", DASH_STACK_WORDS, (void *)data,
+	                         DASH_PRIO, stack, &tcb);
 }
 
 void dashboard_task_fn(void *arg)
 {
-    app_data_t *data = (app_data_t *)arg;
-    dashboard_t *dash = &data->board.dashboard;
-    uint32_t entry;
-    HAL_StatusTypeDef ret;
+	app_data_t *data = (app_data_t *)arg;
+	dashboard_t *dash = &data->board.dashboard;
+	uint32_t entry;
+	HAL_StatusTypeDef ret;
 
-	for(;;)
+	for (;;)
 	{
 		entry = osKernelGetTickCount();
 
@@ -43,11 +43,10 @@ void dashboard_task_fn(void *arg)
 		         (int)fault_is_hard(&data->faults));
 		ret |= dashboard_write(dash, dash->line);
 		speed_sensor_update(&data->board.speed, 1000u / DASH_FREQ);
-		snprintf(dash->line, DASH_LINESZ, "speed_hz %d" NEWLINE,
-		         (int)data->board.speed.hz);
+		snprintf(dash->line, DASH_LINESZ, "speed_hz %d" NEWLINE, (int)data->board.speed.hz);
 		ret |= dashboard_write(dash, dash->line);
 		// Additional metrics can be added after dashboard hardware validation.
-		if(ret != HAL_OK)
+		if (ret != HAL_OK)
 			fault_set(&data->faults, FAULT_DASHBOARD);
 		else
 			fault_clear(&data->faults, FAULT_DASHBOARD);

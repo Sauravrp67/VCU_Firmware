@@ -10,7 +10,7 @@ void speed_sensor_init(speed_sensor_t *s)
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 
 	GPIO_InitTypeDef gpio = {0};
-	gpio.Pin = BSP_SPEED_SENSOR_PIN;          /* PC2 */
+	gpio.Pin = BSP_SPEED_SENSOR_PIN; /* PC2 */
 	gpio.Mode = GPIO_MODE_IT_RISING;
 	gpio.Pull = GPIO_PULLDOWN;
 	HAL_GPIO_Init(BSP_SPEED_SENSOR_PORT, &gpio);
@@ -28,7 +28,8 @@ void speed_sensor_on_edge(speed_sensor_t *s)
 
 void speed_sensor_update(speed_sensor_t *s, uint32_t window_ms)
 {
-	if (window_ms == 0u) return;
+	if (window_ms == 0u)
+		return;
 	uint32_t n = s->pulses;
 	s->pulses = 0u;
 	s->hz = (float)n * 1000.0f / (float)window_ms;
