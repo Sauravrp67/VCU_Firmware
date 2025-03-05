@@ -16,6 +16,7 @@ set(COMMON_FLAGS
     -fdata-sections
     -Wall
     -Wextra
+    -Werror
     -Wno-unused-parameter
     -Wno-missing-field-initializers
 )

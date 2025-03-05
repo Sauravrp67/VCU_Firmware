@@ -19,3 +19,18 @@ jobs:
         run: ./scripts/build.sh release
       - name: Report release size
         run: ./scripts/size.sh release
+
+  host-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install host toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc cmake make
+      - name: Configure host unit tests
+        run: cmake -S test -B build/test
+      - name: Build host unit tests
+        run: cmake --build build/test
+      - name: Run host unit tests
+        run: ctest --test-dir build/test --output-on-failure
