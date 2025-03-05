@@ -9,8 +9,8 @@
  */
 
 
-#include "device_drivers/pressure_sense.h"
-#include "device_drivers/map.h"
+#include "drivers/pressure_sense.h"
+#include "drivers/map.h"
 #include <math.h>
 
 void pressure_sensor_init(pressure_sensor_t *sensor, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle, uint8_t channel)

@@ -1,4 +1,4 @@
-#include "device_drivers/speed_sensor.h"
+#include "drivers/speed_sensor.h"
 #include "main.h"
 #include "bsp/board_config.h"
 

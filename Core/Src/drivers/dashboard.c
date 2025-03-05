@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "device_drivers/dashboard.h"
+#include "drivers/dashboard.h"
 
 int dashboard_init(dashboard_t *dev, UART_HandleTypeDef *huart)
 {

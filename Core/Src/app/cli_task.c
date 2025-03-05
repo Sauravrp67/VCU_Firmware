@@ -1,4 +1,4 @@
-#include "tasks/cli_task.h"
+#include "app/cli_task.h"
 
 void cli_task_fn(void *arg);
 

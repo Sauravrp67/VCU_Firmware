@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "tasks/dashboard_task.h"
-#include "device_drivers/dashboard.h"
+#include "app/dashboard_task.h"
+#include "drivers/dashboard.h"
 
 #define NEWLINE "\r\n"
 

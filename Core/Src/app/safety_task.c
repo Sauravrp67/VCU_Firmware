@@ -1,7 +1,7 @@
-#include "tasks/safety_task.h"
+#include "app/safety_task.h"
 #include "main.h"
 #include "bsp/board_config.h"
-#include "device_drivers/can_bus.h"
+#include "drivers/can_bus.h"
 
 /**
  * @brief The safety_monitor function.

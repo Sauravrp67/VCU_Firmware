@@ -1,5 +1,5 @@
-#include "device_drivers/pot.h"
-#include "device_drivers/map.h"
+#include "drivers/pot.h"
+#include "drivers/map.h"
 
 void pot_init(pot_t *poten, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle)
 {

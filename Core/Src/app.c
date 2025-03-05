@@ -2,11 +2,11 @@
 #include <string.h>
 
 #include "app.h"
-#include "tasks/safety_task.h"
-#include "tasks/rtd_task.h"
-#include "tasks/canbus_task.h"
-#include "tasks/cli_task.h"
-#include "tasks/dashboard_task.h"
+#include "app/safety_task.h"
+#include "app/rtd_task.h"
+#include "app/canbus_task.h"
+#include "app/cli_task.h"
+#include "app/dashboard_task.h"
 #include "proto/can_catalog.h"
 
 

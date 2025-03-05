@@ -1,8 +1,8 @@
 #include <assert.h>
 
 #include "main.h"
-#include "device_drivers/stm32f103.h"
-#include "device_drivers/can_bus.h"
+#include "drivers/stm32f103.h"
+#include "drivers/can_bus.h"
 
 const osMutexAttr_t can1_mutex_attr = {
 	.name = "CAN Bus Mutex",

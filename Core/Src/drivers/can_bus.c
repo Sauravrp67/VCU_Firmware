@@ -1,4 +1,4 @@
-#include "device_drivers/can_bus.h"
+#include "drivers/can_bus.h"
 
 void canbus_device_init(canbus_t *dev, CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *tx_header)
 {

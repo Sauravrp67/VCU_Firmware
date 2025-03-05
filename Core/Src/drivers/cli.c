@@ -2,7 +2,7 @@
 
 #include "cmsis_os.h"
 
-#include "device_drivers/cli.h"
+#include "drivers/cli.h"
 
 void cli_device_init(cli_t *dev, UART_HandleTypeDef *huart)
 {

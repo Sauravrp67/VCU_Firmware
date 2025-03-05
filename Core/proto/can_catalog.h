@@ -22,7 +22,7 @@
 
 #define CAN_DLC 8
 
-/* PLACEHOLDER identifiers — replace with the real catalog. */
+/* replace with the real values of the hardware. */
 #define CAN_ID_VCU_TORQUE_CMD  0x100u  /* VCU -> inverter torque command   */
 #define CAN_ID_INVERTER_HB     0x200u  /* inverter status heartbeat (§5.7) */
 #define CAN_ID_AMS_DCBUS       0x300u  /* AMS DC-bus voltage (§5.4)         */

@@ -14,15 +14,15 @@
 
 #include <stdbool.h>
 
-#include "device_drivers/stm32f103.h"
-#include "device_drivers/can_bus.h"
-#include "device_drivers/current_sensor.h"
-#include "device_drivers/dashboard.h"
-#include "device_drivers/map.h"
-#include "device_drivers/pot.h"
-#include "device_drivers/pressure_sense.h"
-#include "device_drivers/speed_sensor.h"
-#include "device_drivers/cli.h"
+#include "drivers/stm32f103.h"
+#include "drivers/can_bus.h"
+#include "drivers/current_sensor.h"
+#include "drivers/dashboard.h"
+#include "drivers/map.h"
+#include "drivers/pot.h"
+#include "drivers/pressure_sense.h"
+#include "drivers/speed_sensor.h"
+#include "drivers/cli.h"
 
 #define BSE_MIN 200
 #define BSE_MAX 600

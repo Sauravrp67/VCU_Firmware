@@ -42,20 +42,20 @@ add_executable(${PROJECT_NAME}
     Core/Src/syscalls.c
     Core/Src/sysmem.c
     Core/Src/system_stm32f1xx.c
-    Core/Src/device_drivers/can_bus.c
-    Core/Src/device_drivers/cli.c
-    Core/Src/device_drivers/current_sensor.c
-    Core/Src/device_drivers/dashboard.c
-    Core/Src/device_drivers/map.c
-    Core/Src/device_drivers/pot.c
-    Core/Src/device_drivers/pressure_sense.c
-    Core/Src/device_drivers/speed_sensor.c
-    Core/Src/device_drivers/stm32f103.c
-    Core/Src/tasks/safety_task.c
-    Core/Src/tasks/canbus_task.c
-    Core/Src/tasks/cli_task.c
-    Core/Src/tasks/dashboard_task.c
-    Core/Src/tasks/rtd_task.c
+    Core/Src/drivers/can_bus.c
+    Core/Src/drivers/cli.c
+    Core/Src/drivers/current_sensor.c
+    Core/Src/drivers/dashboard.c
+    Core/Src/drivers/map.c
+    Core/Src/drivers/pot.c
+    Core/Src/drivers/pressure_sense.c
+    Core/Src/drivers/speed_sensor.c
+    Core/Src/drivers/stm32f103.c
+    Core/Src/app/safety_task.c
+    Core/Src/app/canbus_task.c
+    Core/Src/app/cli_task.c
+    Core/Src/app/dashboard_task.c
+    Core/Src/app/rtd_task.c
     FATFS/App/fatfs.c
     FATFS/Target/user_diskio.c
     Middlewares/Third_Party/FatFs/src/diskio.c
@@ -99,6 +99,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".elf")
 target_include_directories(${PROJECT_NAME} PRIVATE
     Core
     Core/Inc
+    Core/rtos
     FATFS/App
     FATFS/Target
     Drivers/CMSIS/Device/ST/STM32F1xx/Include

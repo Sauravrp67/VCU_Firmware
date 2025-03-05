@@ -1,5 +1,5 @@
-#include "tasks/canbus_task.h"
-#include "device_drivers/can_bus.h"
+#include "app/canbus_task.h"
+#include "drivers/can_bus.h"
 #include "proto/can_catalog.h"
 
 /**

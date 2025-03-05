@@ -9,7 +9,7 @@
 *
 */
 
-#include "device_drivers/map.h"
+#include "drivers/map.h"
 
 //Arduino's Wiring.h
 
