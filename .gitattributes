@@ -1,2 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Vendored third-party code — excluded from GitHub language stats and collapsed
+# in diffs so the repo reflects the hand-written firmware, not ST's HAL/RTOS.
+Drivers/**                     linguist-vendored
+Middlewares/**                 linguist-vendored
+
+# Generated / boilerplate
+Core/Startup/**                linguist-generated
+Core/Src/system_stm32f1xx.c    linguist-generated
+*.ld                           linguist-generated

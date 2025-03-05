@@ -108,6 +108,7 @@ The script tries `STM32_Programmer_CLI`, then falls back to OpenOCD
 - [`docs/faults.md`](docs/faults.md) — fault classes and responses
 - [`docs/can_catalog.md`](docs/can_catalog.md) — CAN message catalog (placeholder)
 - [`docs/discrepancies.md`](docs/discrepancies.md) — every spec/hardware discrepancy and its resolution
+- [`docs/dependencies.md`](docs/dependencies.md) — vendored third-party components, versions, licenses
 - [`docs/architecture.md`](docs/architecture.md), [`docs/hardware.md`](docs/hardware.md), [`docs/bringup.md`](docs/bringup.md)
 
 API reference (Doxygen): `doxygen Doxyfile` → `build/doxygen/html/index.html`. CI
