@@ -16,7 +16,6 @@
 
 #include "drivers/stm32f103.h"
 #include "drivers/can_bus.h"
-#include "drivers/current_sensor.h"
 #include "drivers/dashboard.h"
 #include "drivers/map.h"
 #include "drivers/pot.h"
@@ -43,7 +42,6 @@ typedef struct {
 	pressure_sensor_t bse;
 	canbus_t canbus;
 	dashboard_t dashboard;
-	current_sensor_t currentSensor;
 	speed_sensor_t speed;
 	cli_t cli;
 } board_t;

@@ -32,7 +32,6 @@ function(vcu_add_test name)
     add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
-vcu_add_test(test_linmap        test_linmap.c        ${CORE}/control/linmap.c)
 vcu_add_test(test_apps          test_apps.c          ${CORE}/control/apps.c)
 vcu_add_test(test_torque        test_torque.c        ${CORE}/control/torque.c)
 vcu_add_test(test_state_machine test_state_machine.c ${CORE}/control/state_machine.c)

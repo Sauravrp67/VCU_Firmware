@@ -36,7 +36,4 @@ void pressure_sensor_init(pressure_sensor_t *sensor,uint16_t min, uint16_t max, 
 //Converts the values received from the adc to percentage of the brake applied
 float pressure_sensor_get_percent(pressure_sensor_t *root);
 
-//Checks for implausibility( will be used in BPPC task)
-uint8_t pressure_sensor_check_implausibility(float L, float R, int thres, int count);
-
 #endif

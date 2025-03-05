@@ -28,7 +28,6 @@ add_executable(${PROJECT_NAME}
     Core/Src/main.c
     Core/Src/app.c
     Core/Src/board.c
-    Core/control/linmap.c
     Core/control/apps.c
     Core/control/torque.c
     Core/control/state_machine.c
@@ -44,7 +43,6 @@ add_executable(${PROJECT_NAME}
     Core/Src/system_stm32f1xx.c
     Core/Src/drivers/can_bus.c
     Core/Src/drivers/cli.c
-    Core/Src/drivers/current_sensor.c
     Core/Src/drivers/dashboard.c
     Core/Src/drivers/map.c
     Core/Src/drivers/pot.c
