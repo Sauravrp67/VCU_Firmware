@@ -1,0 +1,22 @@
+# Formatting for the hand-written VCU firmware (control/ safety/ proto/ app/
+# drivers/ bsp/). The vendored Drivers/ and Middlewares/ trees and the
+# CubeMX-generated files keep ST's formatting and are not reformatted.
+---
+Language:        Cpp
+BasedOnStyle:    LLVM
+UseTab:          ForIndentation
+TabWidth:        4
+IndentWidth:     4
+ContinuationIndentWidth: 4
+ColumnLimit:     100
+BreakBeforeBraces: Allman
+PointerAlignment: Right
+AlignAfterOpenBracket: Align
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+SortIncludes:    false
