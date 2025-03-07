@@ -3,6 +3,7 @@ name: ci
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   firmware-build:
@@ -12,7 +13,12 @@ jobs:
       - name: Install GNU Arm toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi binutils-arm-none-eabi cmake make
+          sudo apt-get install -y --no-install-recommends \
+            gcc-arm-none-eabi \
+            binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            cmake \
+            make
       - name: Build debug
         run: ./scripts/build.sh debug
       - name: Build release
@@ -65,7 +71,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends doxygen
       - name: Generate API docs
-        run: doxygen Doxyfile
+        run: |
+          mkdir -p build/doxygen
+          doxygen Doxyfile
       - name: Upload docs
         uses: actions/upload-artifact@v4
         with:
