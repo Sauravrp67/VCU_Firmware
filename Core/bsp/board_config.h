@@ -3,17 +3,15 @@
  * @brief   Single source of truth for the VCU hardware pin map (BSP layer).
  *
  * This is the ONLY place physical pins, ports, peripherals, and ADC channels
- * are defined. No magic pin numbers anywhere else in the tree. The map below
- * is transcribed from the as-built design (the on-car wiring proven in
- * `Core/Inc/main.h` + `Core/Src/stm32f1xx_hal_msp.c` + `Core/Src/board.c`),
- * which is authoritative per `docs/discrepancies.md`. Where the Re-Architecture
- * Spec §3 whiteboard map disagreed, the code won and the spec was corrected.
+ * are defined. No magic pin numbers anywhere else in the tree. The map matches
+ * the board wiring configured by `Core/Inc/main.h`,
+ * `Core/Src/stm32f1xx_hal_msp.c`, and `Core/bsp/board.c`.
  *
  * Layering: this is a BSP/hardware header and may include the STM32 HAL.
  * `control/`, `safety/`, and `proto/` must NOT include it — they take plain
  * scalar inputs instead.
  *
- * Target: STM32F103RBTx (Cortex-M3) — 128 KB flash, 20 KB RAM. See §7.6.
+ * Target: STM32F103RBTx (Cortex-M3) - 128 KB flash, 20 KB RAM.
  */
 
 #ifndef BSP_BOARD_CONFIG_H
@@ -44,7 +42,7 @@
 #define BSP_BSE_ADC_CH 13U
 
 /* Current sensor (BSPD-related monitoring/telemetry only) — PA7 = ADC1_IN7.
- * NOTE: the BSPD trip itself is hardware, not firmware (Spec §5.3). */
+ * The BSPD trip itself is hardware, not firmware. */
 #define BSP_CURRENT_PORT   GPIOA
 #define BSP_CURRENT_PIN    GPIO_PIN_7
 #define BSP_CURRENT_ADC_CH 7U
@@ -57,11 +55,11 @@
 #define BSP_AIR_STATUS_PORT GPIOC
 #define BSP_AIR_STATUS_PIN  GPIO_PIN_0
 
-/* Ready-To-Drive driver-action input (digital; §7.4 resolved: PC1, not PC4) */
+/* Ready-To-Drive driver-action input (digital) - PC1 */
 #define BSP_RTD_INPUT_PORT GPIOC
 #define BSP_RTD_INPUT_PIN  GPIO_PIN_1
 
-/* Shutdown-circuit status feedback — PA1 (§7.1 resolved: PA1 = SDC status) */
+/* Shutdown-circuit status feedback - PA1 */
 #define BSP_SDC_STATUS_PORT GPIOA
 #define BSP_SDC_STATUS_PIN  GPIO_PIN_1
 
@@ -74,7 +72,7 @@
  * Digital outputs
  * ===========================================================================*/
 
-/* RTD buzzer — PA4 (sound 1-3 s @ >=80 dBA on RTD entry, Spec §5.5) */
+/* RTD buzzer - PA4 (sound 1-3 s at >=80 dBA on RTD entry) */
 #define BSP_RTD_BUZZER_PORT GPIOA
 #define BSP_RTD_BUZZER_PIN  GPIO_PIN_4
 
@@ -82,7 +80,7 @@
 #define BSP_BRAKE_LIGHT_PORT GPIOB
 #define BSP_BRAKE_LIGHT_PIN  GPIO_PIN_2
 
-/* Shutdown-circuit (SDC) output — PB10 (participates in AIR drive, Spec §5.6) */
+/* Shutdown-circuit (SDC) output - PB10 (participates in AIR drive) */
 #define BSP_SDC_OUT_PORT GPIOB
 #define BSP_SDC_OUT_PIN  GPIO_PIN_10
 
@@ -94,22 +92,22 @@
  * Buses / peripherals (configured in stm32f1xx_hal_msp.c)
  * ===========================================================================*/
 
-/* CAN1 (inverter + AMS/BMS) — PB8 RX / PB9 TX, remap CAN1_2 (§7.2: CAN is the
- * authoritative torque-command path). */
+/* CAN1 (inverter + AMS/BMS) - PB8 RX / PB9 TX, remap CAN1_2. CAN is the
+ * authoritative torque-command path. */
 #define BSP_CAN_RX_PORT GPIOB
 #define BSP_CAN_RX_PIN  GPIO_PIN_8
 #define BSP_CAN_TX_PORT GPIOB
 #define BSP_CAN_TX_PIN  GPIO_PIN_9
 
-/* I2C1 (PB6 SCL / PB7 SDA). Present but NOT used for the torque path; MCP4725
- * DAC is dropped per §7.2. Kept for potential auxiliary use. */
+/* I2C1 (PB6 SCL / PB7 SDA). Available for auxiliary devices but not used for
+ * the torque path. */
 #define BSP_I2C1_SCL_PORT GPIOB
 #define BSP_I2C1_SCL_PIN  GPIO_PIN_6
 #define BSP_I2C1_SDA_PORT GPIOB
 #define BSP_I2C1_SDA_PIN  GPIO_PIN_7
 
 /* Dashboard UART = USART1 (PA9 TX / PA10 RX). PA11/PA12 are CTS/RTS-capable but
- * hardware flow control is NOT wired (§7.5): HwFlowCtl = UART_HWCONTROL_NONE. */
+ * hardware flow control is not wired: HwFlowCtl = UART_HWCONTROL_NONE. */
 #define BSP_DASH_UART_TX_PORT GPIOA
 #define BSP_DASH_UART_TX_PIN  GPIO_PIN_9
 #define BSP_DASH_UART_RX_PORT GPIOA
@@ -131,9 +129,8 @@
 #define BSP_SD_MOSI_PORT GPIOB
 #define BSP_SD_MOSI_PIN  GPIO_PIN_15
 
-/* Speed sensor — PC2 (§7.3 resolved: hall/frequency pulse -> timer input
- * capture). NOT YET wired in hardware init; reserved here as the canonical pin
- * for the timer-capture driver added in the FreeRTOS-redesign step. */
+/* Speed sensor - PC2 hall/frequency pulse input using EXTI2 edge counting.
+ * PC2 has no timer-channel alternate function on the STM32F103. */
 #define BSP_SPEED_SENSOR_PORT GPIOC
 #define BSP_SPEED_SENSOR_PIN  GPIO_PIN_2
 
@@ -141,10 +138,9 @@
  * configured in MSP but currently unused by the application. */
 
 /* ===========================================================================
- * Legacy aliases
- * The existing CubeMX-generated names map onto the canonical BSP_* map above so
- * pre-refactor code keeps compiling. New code should use the BSP_* names; these
- * aliases are removed as call sites migrate.
+ * CubeMX-compatible aliases
+ * Generated sources use these names; each alias maps to the canonical BSP_*
+ * hardware definition above.
  * ===========================================================================*/
 
 #define B1_Pin                        BSP_B1_PIN

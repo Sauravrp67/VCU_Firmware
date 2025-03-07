@@ -2,7 +2,7 @@
 
 bool rtd_entry_allowed(bool ts_active, bool brake_pressed, bool rtd_button)
 {
-	/* §5.5: tractive system active AND a brake-inclusive driver action. */
+	/* Require an active tractive system and a brake-inclusive driver action. */
 	return ts_active && brake_pressed && rtd_button;
 }
 

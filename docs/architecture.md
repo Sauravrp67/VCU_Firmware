@@ -6,7 +6,7 @@
 - Board support: `board_t` aggregates MCU handles and logical devices such as APPS, brake pressure, CAN, CLI, and dashboard.
 - Device drivers: thin wrappers for CAN, CLI UART, dashboard UART, ADC-backed potentiometers, and pressure sensor conversion.
 - Application state: `app_data_t` owns shared VCU state and FreeRTOS task handles.
-- Tasks: APPS, BSE, BPPC, RTD, error aggregation, CAN, CLI, and dashboard loops.
+- Tasks: safety monitoring, RTD sequencing, CAN, CLI, and dashboard loops.
 
 ## Startup Flow
 
@@ -20,14 +20,11 @@
 
 | Task | Responsibility |
 | --- | --- |
-| APPS | Reads accelerator sensor percentages and flags plausibility faults. |
-| BSE | Reads brake pressure and drives brake light state. |
-| BPPC | Applies brake/throttle plausibility behavior. |
-| RTD | Handles ready-to-drive transition and RTD output. |
-| Error | Aggregates hard/soft faults and drives firmware/shutdown output. |
-| CAN | Sends APPS-triggered CAN packets using the HAL CAN driver. |
-| CLI | Placeholder task; CLI parser/commands are not yet implemented. |
-| Dashboard | Periodically emits selected app state over UART. |
+| `safety_monitor` | Acquires APPS and brake sensors, evaluates plausibility and faults, controls the brake light and SDC, requests torque transmission, and refreshes the IWDG. |
+| `rtd_task` | Runs RTD sequencing and controls the non-blocking buzzer. |
+| `canbus_task` | Sends fault-gated torque commands using the HAL CAN driver. |
+| `cli_task` | Hosts the serial CLI. |
+| `dashboard_task` | Emits VCU state over UART and updates wheel speed. |
 
 ## Generated-Code Boundary
 

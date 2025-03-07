@@ -9,7 +9,7 @@ bool bppc_update(bppc_state_t *st, float brake_pct, float throttle_pct)
 {
 	if (st->latched)
 	{
-		/* §5.2: clears only when APPS drops below 5% (brake release alone won't). */
+		/* Clear only when APPS drops below 5%; brake release alone is insufficient. */
 		if (throttle_pct < BPPC_APPS_LOW_PCT)
 			st->latched = false;
 	}

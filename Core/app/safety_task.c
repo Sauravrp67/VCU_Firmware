@@ -8,7 +8,7 @@
  *
  * Runs at SAFETY_FREQ (5 ms) as the highest-priority task. Doing acquisition
  * and the plausibility/latch/fault evaluation together in one fast task is what
- * lets the §5.1 100 ms APPS window and the §5.2 brake-throttle latch be detected
+ * lets the 100 ms APPS window and the brake-throttle latch be detected
  * with wide margin, and makes this task the single writer of the shutdown
  * circuit (no inter-task SDC race).
  */
@@ -57,26 +57,26 @@ void safety_task_fn(void *arg)
 		data->torque_cmd = torque_from_throttle_pct((float)data->throttle);
 
 		/* --- Safety evaluation (all hardware-free, host-tested logic) --- */
-		// §5.1 APPS 10%/100ms plausibility incl. open-circuit + idle recovery
+		// APPS 10%/100 ms plausibility, open-circuit, and idle recovery
 		if (apps_plausibility_update(&data->apps_state, apps1->percent, apps2->percent, period))
 			fault_clear(&data->faults, FAULT_APPS);
 		else
 			fault_set(&data->faults, FAULT_APPS);
 
-		// §5.6 BSE open/short circuit
+		// Brake-sensor open/short circuit
 		if (bse->count < BSE_RAW_OPEN_LO || bse->count > BSE_RAW_OPEN_HI)
 			fault_set(&data->faults, FAULT_BSE);
 		else
 			fault_clear(&data->faults, FAULT_BSE);
 
-		// §5.2 brake-throttle latch
+		// Brake-throttle plausibility latch
 		if (bppc_update(&data->bppc_state, (float)data->brake, (float)data->throttle))
 			fault_clear(&data->faults, FAULT_BPPC);
 		else
 			fault_set(&data->faults, FAULT_BPPC);
 
 #if CAN_WATCHDOG_ARMED
-		// §5.7 inverter/AMS command timeout -> zero-torque (armed once the real
+		// Inverter/AMS command timeout -> zero torque once the real
 		// heartbeat ID is configured and fed from the CAN RX callback).
 		if (can_wd_update(&data->can_wd, period))
 			fault_set(&data->faults, FAULT_CAN_TIMEOUT);
@@ -84,7 +84,7 @@ void safety_task_fn(void *arg)
 			fault_clear(&data->faults, FAULT_CAN_TIMEOUT);
 #endif
 
-		/* --- Actuate: sole SDC writer (§5.6). Hard fault => open SDC. --- */
+		/* --- Actuate: sole SDC writer. Hard fault => open SDC. --- */
 		set_fw(!fault_is_hard(&data->faults));
 
 		/* --- Request a torque TX (gated to zero on fault in canbus_task). --- */

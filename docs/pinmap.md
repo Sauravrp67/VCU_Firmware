@@ -1,8 +1,7 @@
 # VCU Pin Map
 
 Source of truth: `Core/bsp/board_config.h`. Target MCU: **STM32F103RBTx**
-(Cortex-M3, 128 KB flash, 20 KB RAM). This table is the as-built map; see
-`discrepancies.md` for where it differs from the original spec §3.
+(Cortex-M3, 128 KB flash, 20 KB RAM).
 
 ## Analog inputs (ADC)
 
@@ -18,10 +17,10 @@ Source of truth: `Core/bsp/board_config.h`. Target MCU: **STM32F103RBTx**
 | Function | Pin | Notes | BSP macro |
 |---|---|---|---|
 | AIR / TSAL status | PC0 | tractive-system-active gate | `BSP_AIR_STATUS_*` |
-| RTD driver action | PC1 | digital (spec §3 said PC4) | `BSP_RTD_INPUT_*` |
-| SDC status feedback | PA1 | spec §3 said current sense | `BSP_SDC_STATUS_*` |
+| RTD driver action | PC1 | digital input | `BSP_RTD_INPUT_*` |
+| SDC status feedback | PA1 | digital input | `BSP_SDC_STATUS_*` |
 | User button (board artifact) | PC13 | Nucleo-F103RB | `BSP_B1_*` |
-| Speed sensor | PC2 | reserved; timer input-capture (Step 7) | `BSP_SPEED_SENSOR_*` |
+| Speed sensor | PC2 | EXTI2 rising-edge input | `BSP_SPEED_SENSOR_*` |
 
 ## Digital outputs
 
@@ -37,8 +36,8 @@ Source of truth: `Core/bsp/board_config.h`. Target MCU: **STM32F103RBTx**
 | Bus | Pins | Notes | BSP macro |
 |---|---|---|---|
 | CAN1 | PB8 RX / PB9 TX | remap CAN1_2 (inverter + AMS) | `BSP_CAN_*` |
-| I2C1 | PB6 SCL / PB7 SDA | present, NOT on torque path (§7.2) | `BSP_I2C1_*` |
-| USART1 (dashboard) | PA9 TX / PA10 RX | no HW flow control (§7.5) | `BSP_DASH_UART_*` |
+| I2C1 | PB6 SCL / PB7 SDA | auxiliary bus; not used for torque | `BSP_I2C1_*` |
+| USART1 (dashboard) | PA9 TX / PA10 RX | no hardware flow control | `BSP_DASH_UART_*` |
 | USART2 (CLI) | PA2 TX / PA3 RX | — | `BSP_CLI_UART_*` |
 | SPI2 (SD card) | PB12 NSS / PB13 SCK / PB14 MISO / PB15 MOSI | FatFs | `BSP_SD_*` |
 | SWD (debug) | PA13 SWDIO / PA14 SWCLK / PB3 SWO | — | — |

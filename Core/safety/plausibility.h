@@ -4,7 +4,7 @@
  *
  * Layer: safety/ — pure, host-testable, no STM32/CMSIS/HAL includes.
  *
- * Safety invariant §5.2 (FSAE-EV EV.4.7):
+ * Brake-throttle plausibility requirements (FSAE-EV EV.4.7):
  *  - When the mechanical brake is actuated AND APPS indicates > 25% pedal travel
  *    at the same time, motor power must be cut immediately.
  *  - The cut LATCHES until APPS drops below 5% travel — releasing the brake
@@ -15,7 +15,7 @@
 
 #include <stdbool.h>
 
-/* §5.2 thresholds (pedal travel percentages). */
+/* Pedal-travel thresholds. */
 #define BPPC_BRAKE_THRESH_PCT 10.0f /* brake considered actuated above this */
 #define BPPC_APPS_HIGH_PCT    25.0f /* throttle that triggers the latch       */
 #define BPPC_APPS_LOW_PCT     5.0f  /* throttle below this clears the latch    */

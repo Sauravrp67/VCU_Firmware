@@ -1,4 +1,4 @@
-/* Fault manager + §5.7 CAN command watchdog (zero-torque on comms loss). */
+/* Fault manager and CAN command watchdog (zero torque on communication loss). */
 #include "safety/fault.h"
 #include "test_framework.h"
 

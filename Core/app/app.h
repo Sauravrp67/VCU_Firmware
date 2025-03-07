@@ -36,7 +36,7 @@
 
 /* The safety-critical loop (APPS/BSE acquisition + plausibility + BPPC + fault
  * manager + SDC + IWDG) runs in one highest-priority task at SAFETY_FREQ so the
- * 100 ms plausibility window is detected with wide margin (§8). */
+ * 100 ms plausibility window is detected with wide margin. */
 #define SAFETY_FREQ 200 /* Hz -> 5 ms safety loop */
 #define DASH_FREQ   5
 #define CLI_FREQ    10
@@ -48,7 +48,7 @@
 #define CAN_PRIO    14
 #define DASH_PRIO   4
 
-/* CAN command watchdog (§5.7): leave DISARMED until the real inverter heartbeat
+/* Leave the CAN command watchdog DISARMED until the real inverter heartbeat
  * ID replaces the placeholder in proto/can_catalog.h. Arming it with a
  * placeholder ID would never be fed and would force permanent zero-torque. */
 #define CAN_WATCHDOG_ARMED 0
@@ -57,14 +57,14 @@ typedef struct
 {
 	int throttle;              /* derived APPS travel, 0..100 */
 	int brake;                 /* derived BSE travel, 0..100 */
-	int16_t torque_cmd;        /* clamped torque command (sent over CAN, Step 6) */
-	volatile float dc_bus_pct; /* AMS DC-bus % of accumulator (CAN RX; §5.4 gate) */
+	int16_t torque_cmd;        /* clamped torque command sent over CAN */
+	volatile float dc_bus_pct; /* AMS DC-bus % of accumulator */
 
 	/* Hardware-free module state (the single owners of safety decisions). */
-	apps_state_t apps_state; /* §5.1 APPS plausibility + recovery */
-	bppc_state_t bppc_state; /* §5.2 brake-throttle latch */
-	fault_mgr_t faults;      /* single fault registry; only error_task acts on it */
-	can_watchdog_t can_wd;   /* §5.7 CAN command watchdog */
+	apps_state_t apps_state; /* APPS plausibility + recovery */
+	bppc_state_t bppc_state; /* brake-throttle latch */
+	fault_mgr_t faults;      /* single fault registry; safety_monitor owns response */
+	can_watchdog_t can_wd;   /* CAN command watchdog */
 	vcu_state_t vcu_state;   /* TS-Off -> ... -> Drive state machine */
 
 	/* Inputs / actuator status. */

@@ -1,4 +1,4 @@
-/* §5.2 brake-throttle latch: cut at brake>10% & APPS>25%, clear only at APPS<5%. */
+/* Brake-throttle latch: cut at brake>10% and APPS>25%, clear only at APPS<5%. */
 #include "safety/plausibility.h"
 #include "test_framework.h"
 

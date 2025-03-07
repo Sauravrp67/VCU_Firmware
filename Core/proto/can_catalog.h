@@ -11,7 +11,7 @@
  * TX torque path compile and can be host-tested. They are NOT the production CAN
  * identifiers. Before flashing on-car, replace them with the real inverter and
  * AMS catalog (message ID, DLC, byte order, scaling/endianness, heartbeat period)
- * from the device datasheets. Tracked in docs/discrepancies.md.
+ * from the device datasheets. See docs/design_notes.md.
  * ===========================================================================
  */
 #ifndef PROTO_CAN_CATALOG_H
@@ -24,8 +24,8 @@
 
 /* replace with the real values of the hardware. */
 #define CAN_ID_VCU_TORQUE_CMD 0x100u /* VCU -> inverter torque command   */
-#define CAN_ID_INVERTER_HB    0x200u /* inverter status heartbeat (§5.7) */
-#define CAN_ID_AMS_DCBUS      0x300u /* AMS DC-bus voltage (§5.4)         */
+#define CAN_ID_INVERTER_HB    0x200u /* inverter status heartbeat */
+#define CAN_ID_AMS_DCBUS      0x300u /* AMS DC-bus voltage         */
 
 /* PLACEHOLDER torque encoding: signed 16-bit, 1 unit/LSB, little-endian in
  * bytes [0..1]; remaining bytes zero. Confirm resolution + endianness. */

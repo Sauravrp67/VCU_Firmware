@@ -2,12 +2,11 @@
  * @file    speed_sensor.h
  * @brief   Wheel/driveshaft speed sensor on PC2 via EXTI edge counting.
  *
- * NOTE (hardware constraint): on the STM32F103, PC2 has NO timer-channel
- * alternate function (it is ADC_IN12 / EXTI2 only), so the spec's "timer
- * input-capture" is not possible on this pin. We therefore count rising edges
- * via EXTI2 and convert the count over a fixed window to a frequency. For higher
- * precision at speed, either move the sensor to a timer-capable pin or use a
- * free-running timer base. Tracked in docs/discrepancies.md.
+ * Hardware constraint: on the STM32F103, PC2 has no timer-channel alternate
+ * function (it is ADC_IN12 / EXTI2 only). The driver therefore counts rising
+ * edges via EXTI2 and converts the count over a fixed window to a frequency.
+ * For higher precision at speed, move the sensor to a timer-capable pin or use
+ * a free-running timer base. See docs/design_notes.md.
  */
 #ifndef __SPEED_SENSOR_H_
 #define __SPEED_SENSOR_H_

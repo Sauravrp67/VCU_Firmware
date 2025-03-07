@@ -1,4 +1,4 @@
-/* §5.7 torque clamp + no reverse. */
+/* Torque clamp and no reverse. */
 #include "control/torque.h"
 #include "test_framework.h"
 

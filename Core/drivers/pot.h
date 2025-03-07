@@ -31,6 +31,6 @@ typedef struct
 
 void pot_init(pot_t *pot, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle);
 float pot_get_percent(pot_t *raw);
-/* APPS plausibility moved to the hardware-free control/apps module (host-tested). */
+/* APPS plausibility is implemented by the hardware-free control/apps module. */
 
 #endif

@@ -11,7 +11,7 @@ telemetry — on top of the STM32 HAL and FreeRTOS.
 > This repository is an engineering artifact, **not** a certified safety product.
 > The CAN message catalog is a placeholder and several behaviors require
 > race-engineer review and hardware-in-the-loop validation before any on-car use
-> (see [`docs/discrepancies.md`](docs/discrepancies.md)).
+> (see [`docs/design_notes.md`](docs/design_notes.md)).
 
 ## Target
 
@@ -107,7 +107,7 @@ The script tries `STM32_Programmer_CLI`, then falls back to OpenOCD
 - [`docs/tasks.md`](docs/tasks.md) — task table, priorities, interrupts
 - [`docs/faults.md`](docs/faults.md) — fault classes and responses
 - [`docs/can_catalog.md`](docs/can_catalog.md) — CAN message catalog (placeholder)
-- [`docs/discrepancies.md`](docs/discrepancies.md) — every spec/hardware discrepancy and its resolution
+- [`docs/design_notes.md`](docs/design_notes.md) — hardware decisions, safety boundaries, and integration requirements
 - [`docs/dependencies.md`](docs/dependencies.md) — vendored third-party components, versions, licenses
 - [`docs/architecture.md`](docs/architecture.md), [`docs/hardware.md`](docs/hardware.md), [`docs/bringup.md`](docs/bringup.md)
 
@@ -122,11 +122,11 @@ also builds it and uploads it as the `api-docs` artifact.
   until the real heartbeat ID is set.
 - **Pre-charge gate** decodes a placeholder AMS DC-bus voltage and does not yet
   gate RTD entry.
-- **BSPD is hardware**, by rule (§5.3) — the firmware deliberately does not
+- **BSPD is hardware**, by rule — the firmware deliberately does not
   implement it; PA7 current-sense is reserved for monitoring/telemetry.
 - **FatFs** has no SD/block-device backend yet (disk ops return `RES_NOTRDY`).
-- Several deliberate safety behavior changes are logged for race-engineer review
-  in `docs/discrepancies.md`.
+- Hardware assumptions and required on-car validation are recorded in
+  `docs/design_notes.md`.
 
 ## CubeMX / CubeIDE
 

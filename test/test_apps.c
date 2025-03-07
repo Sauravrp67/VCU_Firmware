@@ -1,4 +1,4 @@
-/* §5.1 APPS plausibility: 10% deviation, 100 ms persistence, open-circuit,
+/* APPS plausibility: 10% deviation, 100 ms persistence, open-circuit,
  * recovery. */
 #include "control/apps.h"
 #include "test_framework.h"

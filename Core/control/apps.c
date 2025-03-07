@@ -44,8 +44,8 @@ bool apps_plausibility_update(apps_state_t *st, float apps1_pct, float apps2_pct
 	{
 		st->implausible_ms = 0u;
 
-		/* §5.1 recovery: signals agree (in_range && !deviating, satisfied here)
-		 * AND pedal released to idle. */
+		/* Recovery requires agreeing in-range signals and the pedal released to
+		 * idle. */
 		if (st->torque_inhibited && apps1_pct <= APPS_IDLE_PCT && apps2_pct <= APPS_IDLE_PCT)
 		{
 			st->torque_inhibited = false;

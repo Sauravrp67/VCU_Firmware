@@ -1,6 +1,5 @@
 # FreeRTOS Task Table
 
-Task design after the Step 7 redesign (`Core/app/`).
 FreeRTOS 10, preemptive, 1 kHz tick. All application tasks use **static
 allocation** (`xTaskCreateStatic`); the idle/timer/default tasks and mutexes are
 created at init. RAM budget **20 KB**; firmware links at ~74 % (debug).
@@ -16,8 +15,8 @@ created at init. RAM budget **20 KB**; firmware links at ~74 % (debug).
 
 ## Safety loop (safety_monitor)
 The time-critical safety logic runs in **one highest-priority task at 5 ms**, so
-the §5.1 100 ms APPS window and the §5.2 brake-throttle latch are detected with
-~20× margin, and there is a single writer of the shutdown circuit. APPS1 is on
+the 100 ms APPS plausibility window and the brake-throttle latch are detected
+with ~20× margin, and there is a single writer of the shutdown circuit. APPS1 is on
 ADC2; APPS2 and BSE share ADC1 with explicit per-read channel switching. The
 hardware **IWDG** (~0.5 s, register-level) is refreshed only here, so a hung
 safety loop forces a reset.
@@ -39,5 +38,5 @@ may safely use FreeRTOS FromISR APIs.
 - **Pre-charge gate**: `dc_bus_pct` is decoded from a placeholder AMS message but
   not yet used to gate RTD entry (would block on placeholder data).
 - Stack high-water marks should be measured on hardware (`uxTaskGetStackHighWaterMark`).
-- Speed sensor uses EXTI edge-counting (PC2 has no timer channel — see
-  discrepancies.md); revisit if higher precision is needed.
+- Speed sensor uses EXTI edge-counting because PC2 has no timer channel; see
+  `design_notes.md` before changing the implementation.

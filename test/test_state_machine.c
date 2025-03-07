@@ -1,4 +1,4 @@
-/* §5.4 pre-charge >=90% gate; §5.5 RTD entry gating + 1-3 s buzzer window. */
+/* Pre-charge >=90% gate; RTD entry gating and 1-3 s buzzer window. */
 #include "control/state_machine.h"
 #include "test_framework.h"
 

@@ -4,7 +4,7 @@
  *
  * Layer: control/ — pure, host-testable, no STM32/CMSIS/HAL includes.
  *
- * Safety invariant §5.7:
+ * Torque-command requirements:
  *  - Commanded torque is clamped to the rulebook power cap; NO reverse.
  *  - (The CAN command path applies these limits before the inverter sees them.)
  */
@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-/* §5.7 — maximum commanded torque (inverter command units). Proxy for the
+/* Maximum commanded torque (inverter command units). Proxy for the
  * rulebook power cap (e.g. 80 kW); confirm scaling against the inverter's CAN
  * torque-command resolution when the catalog is finalized. */
 #define TORQUE_MAX_CMD 160

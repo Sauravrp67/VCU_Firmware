@@ -13,7 +13,6 @@ TaskHandle_t rtd_task_start(app_data_t *data)
 {
 	static StackType_t stack[RTD_STACK_WORDS];
 	static StaticTask_t tcb;
-	/* Fixed: was a literal priority 20; use RTD_PRIO. */
 	return xTaskCreateStatic(rtd_task_fn, "RTD task", RTD_STACK_WORDS, (void *)data, RTD_PRIO,
 	                         stack, &tcb);
 }
@@ -30,7 +29,7 @@ void rtd_task_fn(void *arg)
 		data->rtd_button = HAL_GPIO_ReadPin(RTD_Input_GPIO_Port, RTD_Input_Pin);
 
 		// A hard fault forces the fail-safe state from anywhere. The SDC itself
-		// is driven by the fault manager (error_task), not here.
+		// is driven by the safety monitor, not here.
 		if (fault_is_hard(&data->faults))
 		{
 			set_buzzer(0);
@@ -47,8 +46,8 @@ void rtd_task_fn(void *arg)
 		case VCU_STATE_TS_OFF:
 			set_buzzer(0);
 			// AIRs closed (tsal) => external pre-charge complete. Pre-charge
-			// voltage gating (precharge_complete(), §5.4) is wired once the AMS
-			// reports DC-bus voltage over CAN (Step 6).
+			// voltage gating is enabled once the production AMS DC-bus signal
+			// is configured.
 			if (data->tsal)
 				data->vcu_state = VCU_STATE_TS_ACTIVE;
 			break;
@@ -58,7 +57,7 @@ void rtd_task_fn(void *arg)
 			{
 				data->vcu_state = VCU_STATE_TS_OFF;
 			}
-			// §5.5 (EV.10.4.3): TS active AND brake-inclusive driver action.
+			// RTD entry requires TS active and a brake-inclusive driver action.
 			else if (rtd_entry_allowed(data->tsal, data->brakelight, data->rtd_button))
 			{
 				set_buzzer(1);
@@ -68,7 +67,7 @@ void rtd_task_fn(void *arg)
 			break;
 
 		case VCU_STATE_RTD:
-			// §5.5: sound the buzzer 1-3 s, non-blocking, then enter Drive.
+			// Sound the buzzer for 1-3 s, non-blocking, then enter Drive.
 			if (!data->tsal || !data->rtd_button)
 			{
 				set_buzzer(0);

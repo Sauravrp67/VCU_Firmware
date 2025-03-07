@@ -34,7 +34,7 @@ void canbus_task_fn(void *arg)
 		xTaskNotifyWait(0, UINT32_MAX, &task_notification, HAL_MAX_DELAY);
 		if (task_notification & CANBUS_APPS)
 		{
-			// §5.7 authoritative zero-torque gate: any torque-inhibiting fault
+			// Any torque-inhibiting fault at the send boundary
 			// (hard fault or BPPC latch) forces the transmitted command to zero.
 			int16_t torque = fault_torque_inhibited(&data->faults) ? 0 : data->torque_cmd;
 			can_encode_torque_cmd(can_packet.data, torque);

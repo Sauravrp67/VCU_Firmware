@@ -5,7 +5,7 @@
  * Layer: control/ — pure, host-testable, no STM32/CMSIS/HAL includes. Operates
  * on plain percentages (0..100) handed in by the acquisition task.
  *
- * Safety invariant §5.1:
+ * APPS plausibility requirements:
  *  - Two independent APPS; implausibility = deviation > 10% pedal travel.
  *  - If implausibility persists > 100 ms, torque must be cut (zero-torque).
  *  - Out-of-range / floating / open-circuit on either channel is implausible.
@@ -17,14 +17,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* §5.1 — deviation over this much pedal travel (percentage points) is implausible.
+/* Deviation over this much pedal travel (percentage points) is implausible.
  * (FSAE-EV APPS plausibility; older ref T.4.2.5.) */
 #define APPS_PLAUSIBILITY_THRESH_PCT 10.0f
 
-/* §5.1 — implausibility must persist beyond this before torque is cut. */
+/* Implausibility must persist beyond this duration before torque is cut. */
 #define APPS_IMPLAUSIBILITY_LIMIT_MS 100u
 
-/* §5.1 — a channel reading outside this band is treated as open/short/out-of-range.
+/* A channel reading outside this band is treated as open/short/out-of-range.
  * Percentages are post-scaling; valid pedal travel lives within [lo, hi]. */
 #define APPS_SIGNAL_MIN_PCT (-5.0f)
 #define APPS_SIGNAL_MAX_PCT 105.0f

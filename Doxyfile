@@ -8,7 +8,15 @@ CREATE_SUBDIRS         = NO
 # Only the hand-written firmware + docs; vendored HAL/FreeRTOS/FatFs and the
 # CubeMX-generated plumbing are excluded.
 INPUT                  = README.md \
-                         docs \
+                         docs/architecture.md \
+                         docs/bringup.md \
+                         docs/can_catalog.md \
+                         docs/dependencies.md \
+                         docs/design_notes.md \
+                         docs/faults.md \
+                         docs/hardware.md \
+                         docs/pinmap.md \
+                         docs/tasks.md \
                          Core/control \
                          Core/safety \
                          Core/proto \

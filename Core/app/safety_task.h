@@ -7,7 +7,7 @@
 /**
  * @brief Starts the safety_monitor task — the highest-priority task that owns
  *        APPS/BSE acquisition, all plausibility checks, the fault manager, the
- *        shutdown-circuit output, and the IWDG refresh (§8).
+ *        shutdown-circuit output, and the IWDG refresh.
  */
 TaskHandle_t safety_task_start(app_data_t *data);
 
