@@ -111,8 +111,18 @@ The script tries `STM32_Programmer_CLI`, then falls back to OpenOCD
 - [`docs/dependencies.md`](docs/dependencies.md) — vendored third-party components, versions, licenses
 - [`docs/architecture.md`](docs/architecture.md), [`docs/hardware.md`](docs/hardware.md), [`docs/bringup.md`](docs/bringup.md)
 
-API reference (Doxygen): `doxygen Doxyfile` → `build/doxygen/html/index.html`. CI
-also builds it and uploads it as the `api-docs` artifact.
+The generated **[Doxygen API reference](https://sauravrp67.github.io/VCU_Firmware/)**
+includes the application, control, safety, protocol, BSP, and driver APIs
+together with the Markdown documentation above.
+
+Generate the same site locally with:
+
+```sh
+mkdir -p build/doxygen
+doxygen Doxyfile
+```
+
+Open `build/doxygen/html/index.html` in a browser.
 
 ## Status / known limitations
 
